@@ -1,5 +1,5 @@
 """
-    Define the game contain board and pieces
+game.py: Define the game contain board and pieces.
 """
 import pygame
 from board import Board
