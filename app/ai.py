@@ -31,12 +31,17 @@ def isValid(board: Board, move: str) -> bool:
 
     Args:
     board (Board): A chess board as a Board object.
-    move (str): The move to be checked.
+    move (list[tuple]): The move to be checked (A move is represented in this format: [source (tuple), destination (tuple)])
 
     Returns:
     True if a move is valid, False otherwise.
     """
-    # TODO
+    source = move[0]
+    destination = move[1]
+
+    # A move is invalid if: The piece at the source position is not the same color as the current player OR the destination is already occupied with pieces of the same side as the curent player
+    if board.getPieceAt(source).color != board.currentPlayer or board.getPieceAt(destination).color == board.currentPlayer:
+        return False
     return True
 
 def getValidMoves(board: Board) -> list[str]:
@@ -47,12 +52,12 @@ def getValidMoves(board: Board) -> list[str]:
     board (Board): A chess board as a Board object.
 
     Returns:
-    list[str]: List of all the valid moves.
+    list[list[tuple]]: List of all the valid moves.
     """
     if board.currentPlayer == Board.WHITE:
-        valid_moves = [move for piece in board.listOfWhitePieces for move in piece.getPossibleMoves if isValid(board, move)]
+        valid_moves = [move for piece in board.listOfWhitePieces for move in piece.getPossibleMoves() if isValid(board, move)]
     else:
-        valid_moves = [move for piece in board.listOfBlackPieces for move in piece.getPossibleMoves if isValid(board, move)]
+        valid_moves = [move for piece in board.listOfBlackPieces for move in piece.getPossibleMoves() if isValid(board, move)]
 
     return valid_moves
 
@@ -62,7 +67,7 @@ def getResultBoard(board:Board, move):
 
     Args:
     board (Board): The current board.
-    move (str): The move that is being made.
+    move (list[tuple]): The move to be checked (A move is represented in this format: [source (tuple), destination (tuple)])
 
     Returns:
     Board: The resulting board after the move.
@@ -113,9 +118,9 @@ def getBestMove(board: Board):
     board (Board): A chess board as a Board object.
 
     Returns:
-    str: The best possible move for the given board (e.g. "e2e4").
+    list(tuple): The best possible move for the given board (A move is represented in this format: [source (tuple), destination (tuple)]).
     """
-
+    
     if (board.currentPlayer == Board.WHITE):
         return getMaxValueAndMove(board=board, currentDepth=0)[1]
     else:

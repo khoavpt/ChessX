@@ -1,6 +1,7 @@
 """
 board.py: Define the chess board and its operations
 """
+from pieces import *
 
 class Board():
     WHITE = 0
@@ -13,9 +14,7 @@ class Board():
 
         self.currentPlayer = currentPlayer
         self.listOfWhitePieces = []
-        self.listOfBlackPieces = []
-        self.board = []
-    
+        self.listOfBlackPieces = []  
     def copy(self):
         """
         Create a copy of the current board.
@@ -36,9 +35,27 @@ class Board():
 
         return boardCopy
     
-    def isEndState(self) -> bool:
+    def getPieceAt(self, coordinate: tuple) -> Piece:
         """
-        Check if the current state is the end state (A state is an end state if one of the kings is removed).
+        Return a chess piece at the given coodinate
+
+        Args:
+        coodinate (tuple): A coodinate on the chess board as a tuple (row, column).
+
+        Returns:
+        Piece: If there exist a piece on the given coordinate, return it. Otherwise return None
+        """
+        for piece in self.listOfWhitePieces:
+            if piece.row == coordinate[0] & piece.column == coordinate[1]:
+                return piece
+        for piece in self.listOfBlackPieces:
+            if piece.row == coordinate[0] & piece.column == coordinate[1]:
+                return piece
+        return None
+
+    def isOver(self) -> bool:
+        """
+        Check if the current state of the board is the end state (A state is an end state if one of the kings is removed).
 
         Args:
         None
@@ -46,8 +63,18 @@ class Board():
         Returns:
         bool: True if the current state is the endstate, False otherwise.
         """
-        # TODO
-        return False
+        kingsCount = 0
+        for piece in self.listOfWhitePieces:
+            if type(piece) == King:
+                kingsCount += 1
+        
+        for piece in self.listOfBlackPieces:
+            if type(piece) == King:
+                kingsCount += 1
+
+        if kingsCount != 2:
+            return False
+        return True
     
     
     def movePiece(self, move: str) -> None:
@@ -60,7 +87,20 @@ class Board():
         Returns:
         None
         """
-        # TODO
+        source = move[0]
+        destination = move[1]
+
+        piece = self.getPieceAt(source)
+        piece.moveTo(destination)
+
+        pieceAtDestination = self.getPieceAt(destination)
+
+        # If there's a piece at the destination, remove it.
+        if pieceAtDestination != None:
+            if piece.color == Board.WHITE & pieceAtDestination.color == Board.BLACK:
+                self.listOfBlackPieces.remove(pieceAtDestination)
+            else:
+                self.listOfWhitePieces.remove(pieceAtDestination)
 
         # Switch turn after the move is made.
         if (self.currentPlayer == Board.WHITE):
