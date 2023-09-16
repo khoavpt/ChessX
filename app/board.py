@@ -17,6 +17,9 @@ class Board():
         self.listOfBlackPieces = [King(x=0, y=0, color=Piece.BLACK),
                                   Knight(x=0, y=1, color=Piece.BLACK)]
         
+        for piece in self.listOfWhitePieces:
+            print(piece.x, piece.y)
+        
 
     def copy(self):
         """
@@ -94,16 +97,13 @@ class Board():
         destination = move[1]
 
         piece = self.getPieceAt(source)
-        piece.moveTo(destination)
-
         pieceAtDestination = self.getPieceAt(destination)
+        piece.moveTo(destination)
 
         # If there's a piece at the destination, remove it.
         if pieceAtDestination != None:
-            if piece.color == Piece.WHITE & pieceAtDestination.color == Piece.BLACK:
+            if piece.color == Piece.WHITE and pieceAtDestination.color == Piece.BLACK:
                 self.listOfBlackPieces.remove(pieceAtDestination)
-            else:
-                self.listOfWhitePieces.remove(pieceAtDestination)
 
         # Switch turn after the move is made.
         if (self.currentPlayer == Piece.WHITE):
