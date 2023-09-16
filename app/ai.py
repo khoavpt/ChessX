@@ -3,6 +3,7 @@ ai.py: Implement the AI logic using minimax and alpha-beta pruning.
 """
 
 from board import Board
+from pieces02 import Piece
 import math
 
 def evaluateBoard(board: Board) -> int:
@@ -39,9 +40,16 @@ def isValid(board: Board, move: str) -> bool:
     source = move[0]
     destination = move[1]
 
-    # A move is invalid if: The piece at the source position is not the same color as the current player OR the destination is already occupied with pieces of the same side as the curent player
-    if board.getPieceAt(source).color != board.currentPlayer or board.getPieceAt(destination).color == board.currentPlayer:
+    # Check if the source position is occupied by a piece.
+    source_piece = board.getPieceAt(source)
+    if source_piece is None:
         return False
+
+    # Check if the destination position is empty or occupied by an enemy piece.
+    destination_piece = board.getPieceAt(destination)
+    if destination_piece is not None and destination_piece.color == source_piece.color:
+        return False
+
     return True
 
 def getValidMoves(board: Board) -> list[str]:
@@ -54,10 +62,10 @@ def getValidMoves(board: Board) -> list[str]:
     Returns:
     list[list[tuple]]: List of all the valid moves.
     """
-    if board.currentPlayer == Board.WHITE:
-        valid_moves = [move for piece in board.listOfWhitePieces for move in piece.getPossibleMoves() if isValid(board, move)]
+    if board.currentPlayer == Piece.WHITE:
+        valid_moves = [move for piece in board.listOfWhitePieces for move in piece.getPossibleMoves(board) if isValid(board, move)]
     else:
-        valid_moves = [move for piece in board.listOfBlackPieces for move in piece.getPossibleMoves() if isValid(board, move)]
+        valid_moves = [move for piece in board.listOfBlackPieces for move in piece.getPossibleMoves(board) if isValid(board, move)]
 
     return valid_moves
 
@@ -78,7 +86,7 @@ def getResultBoard(board:Board, move):
 
 
 def getMaxValueAndMove(board: Board, currentDepth):
-    if board.isEndState() or currentDepth == Board.DEPTH_LIMIT:
+    if board.isOver() or currentDepth == Board.DEPTH_LIMIT:
         return evaluateBoard(board=board)
 
     moves = getValidMoves(board=board)
@@ -95,7 +103,7 @@ def getMaxValueAndMove(board: Board, currentDepth):
 
 
 def getMinValueAndMove(board: Board, currentDepth):
-    if board.isEndState() or currentDepth == Board.DEPTH_LIMIT:
+    if board.isOver() or currentDepth == Board.DEPTH_LIMIT:
         return evaluateBoard(board=board)
 
     moves = getValidMoves(board=board)
@@ -121,7 +129,8 @@ def getBestMove(board: Board):
     list(tuple): The best possible move for the given board (A move is represented in this format: [source (tuple), destination (tuple)]).
     """
     
-    if (board.currentPlayer == Board.WHITE):
+    if (board.currentPlayer == Piece.WHITE):
         return getMaxValueAndMove(board=board, currentDepth=0)[1]
     else:
         return getMinValueAndMove(board=board, currentDepth=0)[1]
+    

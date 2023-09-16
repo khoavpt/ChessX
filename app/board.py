@@ -1,20 +1,23 @@
 """
 board.py: Define the chess board and its operations
 """
-from pieces import *
+from pieces02 import *
 
 class Board():
-    WHITE = 0
-    BLACK = 1
-    DEPTH_LIMIT = 10
+    DEPTH_LIMIT = 2
 
     def __init__(self, currentPlayer) -> None:
         
         # TODO
 
         self.currentPlayer = currentPlayer
-        self.listOfWhitePieces = []
-        self.listOfBlackPieces = []  
+        self.listOfWhitePieces = [King(x=5, y=0, color=Piece.WHITE),
+                                  Rook(x=7, y=0, color=Piece.WHITE)]
+                                
+        self.listOfBlackPieces = [King(x=0, y=0, color=Piece.BLACK),
+                                  Knight(x=0, y=1, color=Piece.BLACK)]
+        
+
     def copy(self):
         """
         Create a copy of the current board.
@@ -46,10 +49,10 @@ class Board():
         Piece: If there exist a piece on the given coordinate, return it. Otherwise return None
         """
         for piece in self.listOfWhitePieces:
-            if piece.row == coordinate[0] & piece.column == coordinate[1]:
+            if piece.x == coordinate[0] and piece.y == coordinate[1]:
                 return piece
         for piece in self.listOfBlackPieces:
-            if piece.row == coordinate[0] & piece.column == coordinate[1]:
+            if piece.x == coordinate[0] and piece.y == coordinate[1]:
                 return piece
         return None
 
@@ -73,16 +76,16 @@ class Board():
                 kingsCount += 1
 
         if kingsCount != 2:
-            return False
-        return True
+            return True
+        return False
     
     
-    def movePiece(self, move: str) -> None:
+    def movePiece(self, move: list[tuple]) -> None:
         """
         Perform a move on the board and update all the board attributes
 
         Args:
-        move (str): A chess move as a String (e.g. "e2e4")
+        move (list[tuple]): The move to be checked (A move is represented in this format: [source (tuple), destination (tuple)])
 
         Returns:
         None
@@ -97,15 +100,15 @@ class Board():
 
         # If there's a piece at the destination, remove it.
         if pieceAtDestination != None:
-            if piece.color == Board.WHITE & pieceAtDestination.color == Board.BLACK:
+            if piece.color == Piece.WHITE & pieceAtDestination.color == Piece.BLACK:
                 self.listOfBlackPieces.remove(pieceAtDestination)
             else:
                 self.listOfWhitePieces.remove(pieceAtDestination)
 
         # Switch turn after the move is made.
-        if (self.currentPlayer == Board.WHITE):
-            self.currentPlayer = Board.BLACK
+        if (self.currentPlayer == Piece.WHITE):
+            self.currentPlayer = Piece.BLACK
         else:
-            self.currentPlayer = Board.WHITE
+            self.currentPlayer = Piece.WHITE
 
         return
