@@ -4,6 +4,7 @@ game.py: Define the game contain board and pieces.
 import pygame
 from board import Board
 from pieces02 import Piece
+import ai
 
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 640
@@ -20,6 +21,7 @@ class Game:
         self.board = Board(Piece.WHITE)
         self.loadImages()
         self.is_selected = (-1, -1)
+        self.hightlight = []
 
 
     def loadImages(self):
@@ -31,7 +33,12 @@ class Game:
         self.playing = True
         while self.playing:
             self.clock.tick(20)
-            self.events()
+            if not self.board.isOver():
+                if self.board.currentPlayer == Piece.WHITE:
+                    self.events()
+                elif self.board.currentPlayer == Piece.BLACK:
+                    move = ai.getBestMove(self.board)
+                    self.board.movePiece(move)
             self.draw()
 
     def events(self):
@@ -44,15 +51,19 @@ class Game:
                 self.handleClick(mouse_pos[0]//80, mouse_pos[1]//80)
 
     def handleClick(self, row, col):
-        # if self.board.currentPlayer == Piece.WHITE:
         if (self.is_selected == (-1, -1)):
-            if(self.board.getPieceAt((row, col)) in self.board.listOfWhitePieces):
+            piece = self.board.getPieceAt((row, col))
+            if(piece in self.board.listOfWhitePieces):
                 self.is_selected = (row, col)
+                for possibleMove in piece.getPossibleMoves(self.board):
+                    print(possibleMove[1])
+                    self.hightlight.append(possibleMove[1])
+
         elif (self.is_selected == (row, col)):
             self.is_selected == (-1, -1)
         else:
             self.move((row, col))
-            self.is_selected = (-1, -1)
+            self.is_selected = (-1, -1)               
 
     def move(self, after):
         move = [self.is_selected, after]
@@ -77,7 +88,9 @@ class Game:
                     pygame.draw.rect(self.window, pygame.Color("white"), pygame.Rect(j*80, i*80, 80, 80))
                 else:
                     pygame.draw.rect(self.window, pygame.Color("gray"), pygame.Rect(j*80, i*80, 80, 80))
-
+        for pos in self.hightlight:
+            pygame.draw.rect(self.window, pygame.Color("red"), pygame.Rect(pos[0]*80, pos[1]*80, 80, 80))
+        pygame.draw.rect(self.window, pygame.Color("green"), pygame.Rect(self.is_selected[0]*80, self.is_selected[1]*80, 80, 80))
 
 game = Game()
 while True:

@@ -13,23 +13,24 @@ class Board():
         self.currentPlayer = currentPlayer
 
         # Initialize pieces
-        self.listOfWhitePieces = [Rook(x=7, y=0, color=Piece.WHITE),
-                                  Rook(x=7, y=7, color=Piece.WHITE),
-                                  Knight(x=7, y=1, color=Piece.WHITE),
-                                  Knight(x=7, y=6, color=Piece.WHITE),
-                                  Bishop(x=7, y=2, color=Piece.WHITE),
-                                  Bishop(x=7, y=5, color=Piece.WHITE),
-                                  Queen(x=7, y=3, color=Piece.WHITE),
-                                  King(x=7, y=4, color=Piece.WHITE)]
+        self.listOfWhitePieces = [Rook(x=7, y=7, color=Piece.WHITE),
+                                  Rook(x=0, y=7, color=Piece.WHITE),
+                                  Knight(x=1, y=7, color=Piece.WHITE),
+                                  Knight(x=6, y=7, color=Piece.WHITE),
+                                  Bishop(x=2, y=7, color=Piece.WHITE),
+                                  Bishop(x=5, y=7, color=Piece.WHITE),
+                                  Queen(x=3, y=7, color=Piece.WHITE),
+                                  King(x=4, y=7, color=Piece.WHITE)]
                                 
+
         self.listOfBlackPieces = [Rook(x=0, y=0, color=Piece.BLACK),
-                                  Rook(x=0, y=7, color=Piece.BLACK),
-                                  Knight(x=0, y=1, color=Piece.BLACK),
-                                  Knight(x=0, y=6, color=Piece.BLACK),
-                                  Bishop(x=0, y=2, color=Piece.BLACK),
-                                  Bishop(x=0, y=5, color=Piece.BLACK),
-                                  Queen(x=0, y=3, color=Piece.BLACK),
-                                  King(x=0, y=4, color=Piece.BLACK)]
+                                  Rook(x=7, y=0, color=Piece.BLACK),
+                                  Knight(x=1, y=0, color=Piece.BLACK),
+                                  Knight(x=6, y=0, color=Piece.BLACK),
+                                  Bishop(x=2, y=0, color=Piece.BLACK),
+                                  Bishop(x=5, y=0, color=Piece.BLACK),
+                                  Queen(x=3, y=0, color=Piece.BLACK),
+                                  King(x=4, y=0, color=Piece.BLACK)]
 
         for i in range(8):
             self.listOfWhitePieces.append(Pawn(i, 6, Piece.WHITE))

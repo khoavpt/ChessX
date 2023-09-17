@@ -144,10 +144,3 @@ def getBestMove(board: Board):
     else:
         return getMinValueAndMove(board=board, currentDepth=0, alpha_beta=alpha_beta)[1]
     
-
-myBoard = Board(currentPlayer=Piece.WHITE)
-
-while(not myBoard.isOver()):
-    bestMove = getBestMove(myBoard)
-    myBoard.movePiece(bestMove)
-    print(bestMove)
