@@ -146,3 +146,8 @@ def getBestMove(board: Board):
     
 
 myBoard = Board(currentPlayer=Piece.WHITE)
+
+while(not myBoard.isOver()):
+    bestMove = getBestMove(myBoard)
+    myBoard.movePiece(bestMove)
+    print(bestMove)

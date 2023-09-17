@@ -4,18 +4,36 @@ board.py: Define the chess board and its operations
 from pieces02 import *
 
 class Board():
-    DEPTH_LIMIT = 10
+    DEPTH_LIMIT = 8
 
     def __init__(self, currentPlayer) -> None:
         
         # TODO
 
         self.currentPlayer = currentPlayer
-        self.listOfWhitePieces = [King(x=7, y=0, color=Piece.WHITE),
-                                  Queen(x=5, y=0, color=Piece.WHITE)]
+
+        # Initialize pieces
+        self.listOfWhitePieces = [Rook(x=7, y=0, color=Piece.WHITE),
+                                  Rook(x=7, y=7, color=Piece.WHITE),
+                                  Knight(x=7, y=1, color=Piece.WHITE),
+                                  Knight(x=7, y=6, color=Piece.WHITE),
+                                  Bishop(x=7, y=2, color=Piece.WHITE),
+                                  Bishop(x=7, y=5, color=Piece.WHITE),
+                                  Queen(x=7, y=3, color=Piece.WHITE),
+                                  King(x=7, y=4, color=Piece.WHITE)]
                                 
-        self.listOfBlackPieces = [King(x=0, y=3, color=Piece.BLACK),
-                                  Knight(x=0, y=1, color=Piece.BLACK)]
+        self.listOfBlackPieces = [Rook(x=0, y=0, color=Piece.BLACK),
+                                  Rook(x=0, y=7, color=Piece.BLACK),
+                                  Knight(x=0, y=1, color=Piece.BLACK),
+                                  Knight(x=0, y=6, color=Piece.BLACK),
+                                  Bishop(x=0, y=2, color=Piece.BLACK),
+                                  Bishop(x=0, y=5, color=Piece.BLACK),
+                                  Queen(x=0, y=3, color=Piece.BLACK),
+                                  King(x=0, y=4, color=Piece.BLACK)]
+
+        for i in range(8):
+            self.listOfWhitePieces.append(Pawn(i, 6, Piece.WHITE))
+            self.listOfBlackPieces.append(Pawn(i, 1, Piece.BLACK))
 
     def copy(self):
         """

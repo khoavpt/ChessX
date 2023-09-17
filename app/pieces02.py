@@ -194,19 +194,19 @@ class Pawn(Piece):
             direction = 1
 
         
-        if (board.getPieceAt(self.x, self.y+direction) == 0):
+        if (board.getPieceAt((self.x, self.y+direction)) == 0):
             moves.append([(self.x, self.y), (self.x, self.y + direction)])
 
         
-        if (self.isStartingPosition() and board.getPieceAt(self.x, self.y+ direction) == 0 and board.getPieceAt(self.x, self.y + direction*2) == 0):
+        if (self.isStartingPosition() and board.getPieceAt((self.x, self.y+ direction)) == 0 and board.getPieceAt((self.x, self.y + direction*2)) == 0):
             moves.append([(self.x, self.y), (self.x, self.y + direction * 2)])
 
         
-        piece = board.getPieceAt(self.x + 1, self.y + direction)
+        piece = board.getPieceAt((self.x + 1, self.y + direction))
         if (piece != 0):
             moves.append([(self.x, self.y), (self.x + 1, self.y + direction)])
 
-        piece = board.getPieceAt(self.x - 1, self.y + direction)
+        piece = board.getPieceAt((self.x - 1, self.y + direction))
         if (piece != 0):
             moves.append([(self.x, self.y), (self.x - 1, self.y + direction)])
 
