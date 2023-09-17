@@ -26,16 +26,14 @@ class Piece:
         moves = []
 
         for i in range(1, 8):        
-
-            piece = board.getPieceAt(self.x+i, self.y+i) 
+            piece = board.getPieceAt((self.x + i, self.y + i)) 
             moves.append([(self.x, self.y), (self.x + i, self.y + i)])
             if (piece != 0):
                 break
 
         for i in range(1, 8):
-            
 
-            piece = board.getPieceAt(self.x+i, self.y-i)
+            piece = board.getPieceAt((self.x+i, self.y-i))
             moves.append([(self.x, self.y), (self.x + i, self.y - i)])
             if (piece != 0):
                 break
@@ -43,14 +41,14 @@ class Piece:
         for i in range(1, 8):
             
 
-            piece = board.getPieceAt(self.x-i, self.y-i)
+            piece = board.getPieceAt((self.x-i, self.y-i))
             moves.append([(self.x, self.y), (self.x - i, self.y - i)])
             if (piece != 0):
                 break
 
         for i in range(1, 8):
             
-            piece = board.getPieceAt(self.x-i, self.y+i)
+            piece = board.getPieceAt((self.x-i, self.y+i))
             moves.append([(self.x, self.y), (self.x - i, self.y + i)])
             if (piece != 0):
                 break      
@@ -61,7 +59,7 @@ class Piece:
 
         
         for i in range(1, 8 - self.x):
-            piece = board.getPieceAt(self.x + i, self.y)
+            piece = board.getPieceAt((self.x + i, self.y))
             moves.append([(self.x, self.y), (self.x+i, self.y)])
 
             if (piece != 0):
@@ -69,21 +67,21 @@ class Piece:
 
         
         for i in range(1, self.x + 1):
-            piece = board.getPieceAt(self.x - i, self.y)
+            piece = board.getPieceAt((self.x - i, self.y))
             moves.append([(self.x, self.y), (self.x-i, self.y)])
             if (piece != 0):
                 break
 
         
         for i in range(1, 8 - self.y):
-            piece = board.getPieceAt(self.x, self.y + i)
+            piece = board.getPieceAt((self.x, self.y + i))
             moves.append([(self.x, self.y), (self.x, self.y+i)])
             if (piece != 0):
                 break
 
         
         for i in range(1, self.y + 1):
-            piece = board.get_piece(self.x, self.y - i)
+            piece = board.getPieceAt((self.x, self.y - i))
             moves.append([(self.x, self.y), (self.x, self.y-i)])
             if (piece != 0):
                 break
@@ -106,7 +104,7 @@ class Rook(Piece):
     def __init__(self, x, y, color):
         super(Rook, self).__init__(x, y, color, Rook.PIECE_TYPE, Rook.VALUE)
     def getPossibleMoves(self, board):
-        return self.getPossibleHorizontalMoves()
+        return self.getPossibleHorizontalMoves(board)
     def copy(self):
         return Rook(self.x, self.y, self.color)
     
@@ -135,7 +133,7 @@ class Bishop(Piece):
     def __init__(self, x, y, color):
         super(Bishop, self).__init__(x, y, color, Bishop.PIECE_TYPE, Bishop.VALUE)
     def getPossibleMoves(self, board):
-        return self.getPossibleDiagonalMoves()
+        return self.getPossibleDiagonalMoves(board)
     def copy(self):
         return Bishop(self.x, self.y, self.color)
     
@@ -145,8 +143,8 @@ class Queen(Piece):
     def __init__(self, x, y, color):
         super(Queen, self).__init__(x, y, color, Queen.PIECE_TYPE, Queen.VALUE)
     def getPossibleMoves(self, board):
-        diagonal = self.getPossibleDiagonalMoves()
-        horizontal = self.getPossibleHorizontalMoves()
+        diagonal = self.getPossibleDiagonalMoves(board)
+        horizontal = self.getPossibleHorizontalMoves(board)
         return horizontal + diagonal
     def copy(self):
         return Queen(self.x, self.y, self.color)
