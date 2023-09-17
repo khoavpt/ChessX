@@ -29,7 +29,7 @@ class Piece:
             moves.append([(self.x, self.y), (self.x + i, self.y - i)])
             moves.append([(self.x, self.y), (self.x - i, self.y - i)])
             moves.append([(self.x, self.y), (self.x - i, self.y + i)])      
-        return self.removeNullFromList(moves)
+        return self.removeInvalidMovesFromList(moves)
     
     def getPossibleHorizontalMoves(self): 
         moves = []        
@@ -41,10 +41,10 @@ class Piece:
             moves.append([(self.x, self.y), (self.x, self.y+i)])        
         for i in range(1, self.y + 1):           
             moves.append([(self.x, self.y), (self.x, self.y-i)])           
-        return self.removeNullFromList(moves)
+        return self.removeInvalidMovesFromList(moves)
     
-    def removeNullFromList(self, l):
-        return [move for move in l if move != 0]
+    def removeInvalidMovesFromList(self, l):
+        return [move for move in l if move != 0 and all(7 >= coord >= 0 for coord in move[1])]
     
     def toString(self):
         colorString = "w" if self.color == Piece.WHITE else "b"
@@ -79,7 +79,7 @@ class Knight(Piece):
         moves.append([(self.x, self.y), (self.x+1, self.y+2)])
         moves.append([(self.x, self.y), (self.x-2, self.y-1)])
         moves.append([(self.x, self.y), (self.x-1, self.y-2)])
-        return self.removeNullFromList(moves)
+        return self.removeInvalidMovesFromList(moves)
     def copy(self):
         return Knight(self.x, self.y, self.color)
     
@@ -121,7 +121,7 @@ class King(Piece):
         moves.append([(self.x, self.y), (self.x, self.y-1)])
         moves.append([(self.x, self.y), (self.x+1, self.y-1)])
 
-        return self.removeNullFromList(moves)
+        return self.removeInvalidMovesFromList(moves)
         '''moves.append(self.get_castle_kingside_move())
         # moves.append(self.get_castle_queenside_move())
     
@@ -210,7 +210,7 @@ class Pawn(Piece):
         if (piece != 0):
             moves.append([(self.x, self.y), (self.x - 1, self.y + direction)])
 
-        return self.removeNullFromList(moves)
+        return self.removeInvalidMovesFromList(moves)
 
     def copy(self):
         return Pawn(self.x, self.y, self.color)

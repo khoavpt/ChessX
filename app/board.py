@@ -4,22 +4,18 @@ board.py: Define the chess board and its operations
 from pieces02 import *
 
 class Board():
-    DEPTH_LIMIT = 2
+    DEPTH_LIMIT = 10
 
     def __init__(self, currentPlayer) -> None:
         
         # TODO
 
         self.currentPlayer = currentPlayer
-        self.listOfWhitePieces = [King(x=5, y=0, color=Piece.WHITE),
-                                  Rook(x=7, y=0, color=Piece.WHITE)]
+        self.listOfWhitePieces = [King(x=7, y=0, color=Piece.WHITE),
+                                  Queen(x=5, y=0, color=Piece.WHITE)]
                                 
-        self.listOfBlackPieces = [King(x=0, y=0, color=Piece.BLACK),
+        self.listOfBlackPieces = [King(x=0, y=3, color=Piece.BLACK),
                                   Knight(x=0, y=1, color=Piece.BLACK)]
-        
-        for piece in self.listOfWhitePieces:
-            print(piece.x, piece.y)
-        
 
     def copy(self):
         """
@@ -37,7 +33,7 @@ class Board():
         boardCopy.listOfWhitePieces = [piece.copy() for piece in self.listOfWhitePieces]
         boardCopy.listOfBlackPieces = [piece.copy() for piece in self.listOfBlackPieces]
 
-        boardCopy.board = [[piece for piece in row] for row in self.board]
+        # boardCopy.board = [[piece for piece in row] for row in self.board]
 
         return boardCopy
     
@@ -100,10 +96,12 @@ class Board():
         pieceAtDestination = self.getPieceAt(destination)
         piece.moveTo(destination)
 
-        # If there's a piece at the destination, remove it.
+        # If there's a different colored piece at the destination, remove it.
         if pieceAtDestination != None:
             if piece.color == Piece.WHITE and pieceAtDestination.color == Piece.BLACK:
                 self.listOfBlackPieces.remove(pieceAtDestination)
+            else:
+                self.listOfWhitePieces.remove(pieceAtDestination)
 
         # Switch turn after the move is made.
         if (self.currentPlayer == Piece.WHITE):

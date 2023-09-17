@@ -52,7 +52,7 @@ def isValid(board: Board, move: str) -> bool:
 
     return True
 
-def getValidMoves(board: Board) -> list[str]:
+def getValidMoves(board: Board) -> list[list[tuple]]:
     """
     Generate all the possible moves from the given board.
 
@@ -84,39 +84,47 @@ def getResultBoard(board:Board, move):
     resultBoard.movePiece(move)
     return resultBoard
 
-
-def getMaxValueAndMove(board: Board, currentDepth):
+def getMaxValueAndMove(board: Board, currentDepth, alpha_beta):
+    alpha, beta = alpha_beta
     if board.isOver() or currentDepth == Board.DEPTH_LIMIT:
-        return evaluateBoard(board=board)
+        return (evaluateBoard(board=board), None)
 
     moves = getValidMoves(board=board)
-    max = -math.inf
+    max_val = -math.inf
     play = moves[0]
 
     for move in moves:
-        min = getMinValueAndMove(getResultBoard(board, move=move), currentDepth+1)[0]
-        if min > max:
-            max = min
+        min_val = getMinValueAndMove(getResultBoard(board, move=move), currentDepth+1, alpha_beta)[0]
+        if min_val > max_val:
+            max_val = min_val
             play = move
+        alpha = max(alpha, max_val)
+        if beta <= alpha:
+            break
 
-    return (max, play)
+    alpha_beta[0] = alpha
+    return (max_val, play)
 
-
-def getMinValueAndMove(board: Board, currentDepth):
+def getMinValueAndMove(board: Board, currentDepth, alpha_beta):
+    alpha, beta = alpha_beta
     if board.isOver() or currentDepth == Board.DEPTH_LIMIT:
-        return evaluateBoard(board=board)
+        return (evaluateBoard(board=board), None)
 
     moves = getValidMoves(board=board)
-    min = math.inf
+    min_val = math.inf
     play = moves[0]
 
     for move in moves:
-        max = getMaxValueAndMove(getResultBoard(board, move=move), currentDepth+1)[0]
-        if max < min:
-            min = max
+        max_val = getMaxValueAndMove(getResultBoard(board, move=move), currentDepth+1, alpha_beta)[0]
+        if max_val < min_val:
+            min_val = max_val
             play = move
+        beta = min(beta, min_val)
+        if beta <= alpha:
+            break
 
-    return (min, play)
+    alpha_beta[1] = beta
+    return (min_val, play)
 
 def getBestMove(board: Board):
     """
@@ -129,8 +137,12 @@ def getBestMove(board: Board):
     list(tuple): The best possible move for the given board (A move is represented in this format: [source (tuple), destination (tuple)]).
     """
     
-    if (board.currentPlayer == Piece.WHITE):
-        return getMaxValueAndMove(board=board, currentDepth=0)[1]
+    alpha_beta = [-math.inf, math.inf]
+
+    if board.currentPlayer == Piece.WHITE:
+        return getMaxValueAndMove(board=board, currentDepth=0, alpha_beta=alpha_beta)[1]
     else:
-        return getMinValueAndMove(board=board, currentDepth=0)[1]
+        return getMinValueAndMove(board=board, currentDepth=0, alpha_beta=alpha_beta)[1]
     
+
+myBoard = Board(currentPlayer=Piece.WHITE)
