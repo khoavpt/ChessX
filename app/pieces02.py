@@ -22,27 +22,73 @@ class Piece:
         self.x = coordinate[0]
         self.y = coordinate[1]
 
-    def getPossibleDiagonalMoves(self):
+    def getPossibleDiagonalMoves(self, board):
         moves = []
-        for i in range(1, 8):
+
+        for i in range(1, 8):        
+
+            piece = board.getPieceAt(self.x+i, self.y+i) 
             moves.append([(self.x, self.y), (self.x + i, self.y + i)])
+            if (piece != 0):
+                break
+
+        for i in range(1, 8):
+            
+
+            piece = board.getPieceAt(self.x+i, self.y-i)
             moves.append([(self.x, self.y), (self.x + i, self.y - i)])
+            if (piece != 0):
+                break
+
+        for i in range(1, 8):
+            
+
+            piece = board.getPieceAt(self.x-i, self.y-i)
             moves.append([(self.x, self.y), (self.x - i, self.y - i)])
-            moves.append([(self.x, self.y), (self.x - i, self.y + i)])      
+            if (piece != 0):
+                break
+
+        for i in range(1, 8):
+            
+            piece = board.getPieceAt(self.x-i, self.y+i)
+            moves.append([(self.x, self.y), (self.x - i, self.y + i)])
+            if (piece != 0):
+                break      
         return self.removeInvalidMovesFromList(moves)
     
-    def getPossibleHorizontalMoves(self): 
-        moves = []        
-        for i in range(1, 8 - self.x):            
-            moves.append([(self.x, self.y), (self.x+i, self.y)])                    
-        for i in range(1, self.x + 1):            
-            moves.append([(self.x, self.y), (self.x-i, self.y)])    
+    def getPossibleHorizontalMoves(self, board): 
+        moves = []
+
+        
+        for i in range(1, 8 - self.x):
+            piece = board.getPieceAt(self.x + i, self.y)
+            moves.append([(self.x, self.y), (self.x+i, self.y)])
+
+            if (piece != 0):
+                break
+
+        
+        for i in range(1, self.x + 1):
+            piece = board.getPieceAt(self.x - i, self.y)
+            moves.append([(self.x, self.y), (self.x-i, self.y)])
+            if (piece != 0):
+                break
+
+        
         for i in range(1, 8 - self.y):
-            moves.append([(self.x, self.y), (self.x, self.y+i)])        
-        for i in range(1, self.y + 1):           
-            moves.append([(self.x, self.y), (self.x, self.y-i)])           
+            piece = board.getPieceAt(self.x, self.y + i)
+            moves.append([(self.x, self.y), (self.x, self.y+i)])
+            if (piece != 0):
+                break
+
+        
+        for i in range(1, self.y + 1):
+            piece = board.get_piece(self.x, self.y - i)
+            moves.append([(self.x, self.y), (self.x, self.y-i)])
+            if (piece != 0):
+                break
+
         return self.removeInvalidMovesFromList(moves)
-    
     def removeInvalidMovesFromList(self, l):
         return [move for move in l if move != 0 and all(7 >= coord >= 0 for coord in move[1])]
     
