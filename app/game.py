@@ -40,6 +40,7 @@ class Game:
         while True:
             self.drawBoardGame()
             self.drawPossibleMoves()
+            self.drawSelectedPiece()    
             self.drawLastMove()
             self.drawPieces()
 
@@ -62,12 +63,13 @@ class Game:
                         if not self.selected:
                             piece = self.board.getPieceAt((row, col))
                             if piece in self.board.listOfWhitePieces:
-                                self.selected = piece
+                                self.selected = piece        
                             
                         else:
                             selectedPiece = self.selected
                             possibleMoves = selectedPiece.getPossibleMoves(self.board)
                             for move in possibleMoves:
+                                print(move)
                                 if (row, col) == move[1]:
                                     move = [(self.selected.x, self.selected.y), (row, col)]
                                     self.move(move)
@@ -83,6 +85,11 @@ class Game:
         self.drawBoardGame()
         self.drawLastMove()
         self.drawPieces()
+
+    def drawSelectedPiece(self):
+        if self.selected:
+            selectedPiece = self.selected
+            pygame.draw.rect(self.window, pygame.Color("yellow"), pygame.Rect(selectedPiece.x*SQ_SIZE, selectedPiece.y*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
     def drawPieces(self):
         for piece in self.board.listOfWhitePieces:
