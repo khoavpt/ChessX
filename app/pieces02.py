@@ -1,105 +1,218 @@
 from abc import abstractmethod
 class Piece:
-    WHITE = "W"
-    BLACK = "B"
-    def __init__(self, x, y, pieceType, color, value):       
+    WHITE = 0
+    BLACK = 1
+    def __init__(self, x, y, color, pieceType, value):       
         self.x = x
         self.y = y
         self.pieceType = pieceType
         self.color = color
-        self.value = value     
-    def getPossibleDiagonalMoves(self):
+        self.value = value
+
+    def moveTo(self, coordinate:tuple)->None:
+        """
+        Move a piece to the given coordinate. 
+
+        Args: 
+        coordinate (tuple): A coordinate on the chess board as a tuple.
+
+        Returns:
+        None
+        """
+        self.x = coordinate[0]
+        self.y = coordinate[1]
+    def in_bounds(self, x, y):
+        return (x >= 0 and y >= 0 and x < 8 and y < 8)
+
+    def getPossibleDiagonalMoves(self, board):
         moves = []
+
         for i in range(1, 8):
+            if (not board.in_bounds(self.x+i, self.y+i)):
+                break
+
+            piece = board.getPieceAt(self.x+i, self.y+i)
             moves.append([(self.x, self.y), (self.x + i, self.y + i)])
+            if (piece != 0):
+                break
+
+        for i in range(1, 8):
+            if (not board.in_bounds(self.x+i, self.y-i)):
+                break
+
+            piece = board.getPieceAt(self.x+i, self.y-i)
             moves.append([(self.x, self.y), (self.x + i, self.y - i)])
+            if (piece != 0):
+                break
+
+        for i in range(1, 8):
+            if (not board.in_bounds(self.x-i, self.y-i)):
+                break
+
+            piece = board.getPieceAt(self.x-i, self.y-i)
             moves.append([(self.x, self.y), (self.x - i, self.y - i)])
+            if (piece != 0):
+                break
+
+        for i in range(1, 8):
+            if (not board.in_bounds(self.x-i, self.y+i)):
+                break
+
+            piece = board.getPieceAt(self.x-i, self.y+i)
             moves.append([(self.x, self.y), (self.x - i, self.y + i)])      
+            if (piece != 0):
+                break
+
         return self.removeNullFromList(moves)
-    def getPossibleHorizontalMoves(self): 
-        moves = []        
-        for i in range(1, 8 - self.x):            
-            moves.append([(self.x, self.y), (self.x+i, self.y)])                    
-        for i in range(1, self.x + 1):            
-            moves.append([(self.x, self.y), (self.x-i, self.y)])    
+    
+    def getPossibleHorizontalMoves(self, board):
+        moves = []
+
+        
+        for i in range(1, 8 - self.x):
+            piece = board.getPieceAt(self.x + i, self.y)
+            moves.append([(self.x, self.y), (self.x+i, self.y)])
+
+            if (piece != 0):
+                break
+
+        
+        for i in range(1, self.x + 1):
+            piece = board.getPieceAt(self.x - i, self.y)
+            moves.append([(self.x, self.y), (self.x-i, self.y)])
+            if (piece != 0):
+                break
+
+        
         for i in range(1, 8 - self.y):
-            moves.append([(self.x, self.y), (self.x, self.y+i)])        
-        for i in range(1, self.y + 1):           
-            moves.append([(self.x, self.y), (self.x, self.y-i)])           
-        return self.removeNullFromList(moves)
-    def removeNullFromList(self, l):
-        return [move for move in l if move != 0]
+            piece = board.getPieceAt(self.x, self.y + i)
+            moves.append([(self.x, self.y), (self.x, self.y+i)])
+            if (piece != 0):
+                break
+
+        
+        for i in range(1, self.y + 1):
+            piece = board.getPieceAt(self.x, self.y - i)
+            moves.append([(self.x, self.y), (self.x, self.y-i)])
+            if (piece != 0):
+                break    
+            
+
+        return self.removeInvalidMovesFromList(moves)
+    def removeInvalidMovesFromList(self, l):
+        return [move for move in l if move != 0 and all(7 >= coord >= 0 for coord in move[1])]
+    
     def toString(self):
-        return self.color + self.pieceType + " "
+        colorString = "w" if self.color == Piece.WHITE else "b"
+        return colorString + self.pieceType + " "
+    
     @abstractmethod
-    def getPossibleMoves(self):
+    def getPossibleMoves(self, board):
         pass
+
 class Rook(Piece):
     PIECE_TYPE = "R"
-    VALUE = None
+    VALUE = 50
     def __init__(self, x, y, color):
         super(Rook, self).__init__(x, y, color, Rook.PIECE_TYPE, Rook.VALUE)
-    def getPossibleMoves(self):
-        return self.getPossibleHorizontalMoves()
+    def getPossibleMoves(self, board):
+        return self.getPossibleHorizontalMoves(board)
     def copy(self):
         return Rook(self.x, self.y, self.color)
+    
 class Knight(Piece):
     PIECE_TYPE = "N"
-    VALUE = None
+    VALUE = 30
     def __init__(self, x, y, color):
         super(Knight, self).__init__(x, y, color, Knight.PIECE_TYPE, Knight.VALUE)
-    def getPossibleMoves(self):
+    def getPossibleMoves(self, board):
         moves = []
-        moves.append([(self.x, self.y), (self.x+2, self.y+1)])
-        moves.append([(self.x, self.y), (self.x-1, self.y+2)])
-        moves.append([(self.x, self.y), (self.x-2, self.y+1)])
-        moves.append([(self.x, self.y), (self.x+1, self.y-2)])
-        moves.append([(self.x, self.y), (self.x+2, self.y-1)])
-        moves.append([(self.x, self.y), (self.x+1, self.y+2)])
-        moves.append([(self.x, self.y), (self.x-2, self.y-1)])
-        moves.append([(self.x, self.y), (self.x-1, self.y-2)])
-        return self.removeNullFromList(moves)
+        piece = board.getPieceAt((self.x + 2, self.y + 1))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x+2, self.y+1)])
+        piece = board.getPieceAt((self.x - 1, self.y + 2))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x-1, self.y+2)])
+        piece = board.getPieceAt((self.x - 2, self.y + 1))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x-2, self.y+1)])
+        piece = board.getPieceAt((self.x + 1, self.y - 2))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x+1, self.y-2)])
+        piece = board.getPieceAt((self.x + 2, self.y - 1))
+        if (piece == 0 and piece.color != self.color):        
+            moves.append([(self.x, self.y), (self.x+2, self.y-1)])
+        piece = board.getPieceAt((self.x + 1, self.y + 2))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x+1, self.y+2)])
+        piece = board.getPieceAt((self.x - 2, self.y - 1))
+        if (piece == 0 and piece.color != self.color):                  
+            moves.append([(self.x, self.y), (self.x-2, self.y-1)])
+        piece = board.getPieceAt((self.x - 1, self.y - 2))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x-1, self.y-2)])
+        return self.removeInvalidMovesFromList(moves)
     def copy(self):
         return Knight(self.x, self.y, self.color)
+    
 class Bishop(Piece):
     PIECE_TYPE = "B"
-    VALUE = None
+    VALUE = 30
     def __init__(self, x, y, color):
         super(Bishop, self).__init__(x, y, color, Bishop.PIECE_TYPE, Bishop.VALUE)
     def getPossibleMoves(self, board):
         return self.getPossibleDiagonalMoves(board)
     def copy(self):
         return Bishop(self.x, self.y, self.color)
+    
 class Queen(Piece):
     PIECE_TYPE = "Q"
-    VALUE = None
+    VALUE = 90
     def __init__(self, x, y, color):
         super(Queen, self).__init__(x, y, color, Queen.PIECE_TYPE, Queen.VALUE)
-    def getPossibleMoves(self):
-        diagonal = self.getPossibleDiagonalMoves()
-        horizontal = self.getPossibleHorizontalMoves()
+    def getPossibleMoves(self, board):
+        diagonal = self.getPossibleDiagonalMoves(board)
+        horizontal = self.getPossibleHorizontalMoves(board)
         return horizontal + diagonal
     def copy(self):
         return Queen(self.x, self.y, self.color)
+    
 class King(Piece):
     PIECE_TYPE = "K"
-    VALUE = None
+    VALUE = 900
     def __init__(self, x, y, color):
         super(King, self).__init__(x, y, color, King.PIECE_TYPE, King.VALUE)
-    def getPossibleMoves(self):
+    def getPossibleMoves(self, board):
         moves = []
-        moves.append([(self.x, self.y), (self.x+1, self.y)])
-        moves.append([(self.x, self.y), (self.x+1, self.y+1)])
-        moves.append([(self.x, self.y), (self.x, self.y+1)])
-        moves.append([(self.x, self.y), (self.x-1, self.y+1)])
-        moves.append([(self.x, self.y), (self.x-1, self.y)])
-        moves.append([(self.x, self.y), (self.x-1, self.y-1)])
-        moves.append([(self.x, self.y), (self.x, self.y-1)])
-        moves.append([(self.x, self.y), (self.x+1, self.y-1)])
+        piece = board.getPieceAt((self.x + 1, self.y))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x+1, self.y)])
+        piece = board.getPieceAt((self.x + 1, self.y + 1))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x+1, self.y+1)])
+        piece = board.getPieceAt((self.x , self.y + 1))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x, self.y+1)])
+        piece = board.getPieceAt((self.x - 1, self.y + 1))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x-1, self.y+1)])
+        piece = board.getPieceAt((self.x - 1, self.y))
+        if (piece == 0 and piece.color != self.color):        
+            moves.append([(self.x, self.y), (self.x-1, self.y)])
+        piece = board.getPieceAt((self.x - 1, self.y - 1))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x-1, self.y-1)])
+        piece = board.getPieceAt((self.x , self.y - 1))
+        if (piece == 0 and piece.color != self.color):                  
+            moves.append([(self.x, self.y), (self.x, self.y-1)])
+        piece = board.getPieceAt((self.x +1 , self.y - 1))
+        if (piece == 0 and piece.color != self.color):
+            moves.append([(self.x, self.y), (self.x+1, self.y-1)])
+        
 
+        return self.removeInvalidMovesFromList(moves)
         '''moves.append(self.get_castle_kingside_move())
         # moves.append(self.get_castle_queenside_move())
-        return self.removeNullFromList(moves)
     
     # def get_castle_kingside_move(self, board):
         
@@ -150,9 +263,10 @@ class King(Piece):
 
     def copy(self):
         return King(self.x, self.y, self.color)
+    
 class Pawn(Piece):
     PIECE_TYPE = "P"
-    VALUE = None
+    VALUE = 10
     def __init__(self, x, y, color):
         super(Pawn, self).__init__(x, y, color, Pawn.PIECE_TYPE, Pawn.VALUE)
 
@@ -169,23 +283,23 @@ class Pawn(Piece):
             direction = 1
 
         
-        if (board.getPieceAt(self.x, self.y+direction) == 0):
+        if (board.getPieceAt((self.x, self.y+direction)) == 0):
             moves.append([(self.x, self.y), (self.x, self.y + direction)])
 
         
-        if (self.isStartingPosition() and board.getPieceAt(self.x, self.y+ direction) == 0 and board.getPieceAt(self.x, self.y + direction*2) == 0):
+        if (self.isStartingPosition() and board.getPieceAt((self.x, self.y+ direction)) == 0 and board.getPieceAt((self.x, self.y + direction*2)) == 0):
             moves.append([(self.x, self.y), (self.x, self.y + direction * 2)])
 
         
-        piece = board.getPieceAt(self.x + 1, self.y + direction)
-        if (piece != 0):
+        piece = board.getPieceAt((self.x + 1, self.y + direction))
+        if (piece != 0 and piece.color != self.color):
             moves.append([(self.x, self.y), (self.x + 1, self.y + direction)])
 
-        piece = board.getPieceAt(self.x - 1, self.y + direction)
-        if (piece != 0):
+        piece = board.getPieceAt((self.x - 1, self.y + direction))
+        if (piece != 0 and piece.color != self.color):
             moves.append([(self.x, self.y), (self.x - 1, self.y + direction)])
 
-        return self.removeNullFromList(moves)
+        return self.removeInvalidMovesFromList(moves)
 
     def copy(self):
         return Pawn(self.x, self.y, self.color)
