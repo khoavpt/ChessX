@@ -26,29 +26,29 @@ def evaluateBoard(board: Board) -> int:
 
     return boardScore
 
-def isValid(board: Board, move: str) -> bool:
-    """
-    Check if a move is valid or not.
+# def isValid(board: Board, move: str) -> bool:
+#     """
+#     Check if a move is valid or not.
 
-    Args:
-    board (Board): A chess board as a Board object.
-    move (list[tuple]): The move to be checked (A move is represented in this format: [source (tuple), destination (tuple)])
+#     Args:
+#     board (Board): A chess board as a Board object.
+#     move (list[tuple]): The move to be checked (A move is represented in this format: [source (tuple), destination (tuple)])
 
-    Returns:
-    True if a move is valid, False otherwise.
-    """
-    source = move[0]
-    destination = move[1]
+#     Returns:
+#     True if a move is valid, False otherwise.
+#     """
+#     source = move[0]
+#     destination = move[1]
 
-    # Check if the source position is occupied by a piece.
-    source_piece = board.getPieceAt(source)
-    if source_piece is None:
-        return False
+#     # Check if the source position is occupied by a piece.
+#     source_piece = board.getPieceAt(source)
+#     if source_piece is None:
+#         return False
 
-    # Check if the destination position is empty or occupied by an enemy piece.
-    destination_piece = board.getPieceAt(destination)
-    if destination_piece is not None and destination_piece.color == source_piece.color:
-        return False
+#     # Check if the destination position is empty or occupied by an enemy piece.
+#     destination_piece = board.getPieceAt(destination)
+#     if destination_piece is not None and destination_piece.color == source_piece.color:
+#         return False
 
     return True
 
@@ -63,9 +63,9 @@ def getValidMoves(board: Board) -> list[list[tuple]]:
     list[list[tuple]]: List of all the valid moves.
     """
     if board.currentPlayer == Piece.WHITE:
-        valid_moves = [move for piece in board.listOfWhitePieces for move in piece.getPossibleMoves(board) if isValid(board, move)]
+        valid_moves = [move for piece in board.listOfWhitePieces for move in piece.getPossibleMoves(board)]
     else:
-        valid_moves = [move for piece in board.listOfBlackPieces for move in piece.getPossibleMoves(board) if isValid(board, move)]
+        valid_moves = [move for piece in board.listOfBlackPieces for move in piece.getPossibleMoves(board)]
 
     return valid_moves
 
