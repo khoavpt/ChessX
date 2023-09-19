@@ -4,7 +4,7 @@ board.py: Define the chess board and its operations
 from pieces02 import *
 
 class Board():
-    DEPTH_LIMIT = 8
+    DEPTH_LIMIT = 4
 
     def __init__(self, currentPlayer) -> None:
         
@@ -31,11 +31,11 @@ class Board():
                                   Bishop(x=5, y=0, color=Piece.BLACK),
                                   Queen(x=3, y=0, color=Piece.BLACK),
                                   King(x=4, y=0, color=Piece.BLACK)]
-
+        
         for i in range(8):
             self.listOfWhitePieces.append(Pawn(i, 6, Piece.WHITE))
             self.listOfBlackPieces.append(Pawn(i, 1, Piece.BLACK))
-
+            
     def copy(self):
         """
         Create a copy of the current board.
