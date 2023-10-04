@@ -48,6 +48,7 @@ class Game:
                 move = ai.getBestMove(self.board)
                 pygame.time.delay(1000)
                 self.move(move)
+                print(self.board.toString())
                 
 
             for event in pygame.event.get():
@@ -67,13 +68,12 @@ class Game:
                             
                         else:
                             selectedPiece = self.selected
-                            possibleMoves = selectedPiece.getPossibleMoves(self.board)
+                            possibleMoves = selectedPiece.getPossibleMoves(self.board)[0] + selectedPiece.getPossibleMoves(self.board)[1]
                             for move in possibleMoves:
-                                print(move)
                                 if (row, col) == move[1]:
                                     move = [(self.selected.x, self.selected.y), (row, col)]
                                     self.move(move)
-                                         
+                                    print(self.board.toString())
                             self.selected = None
                                     
 
@@ -109,7 +109,7 @@ class Game:
     def drawPossibleMoves(self):
         if self.selected:
             piece = self.selected
-            possibleMoves = piece.getPossibleMoves(self.board)
+            possibleMoves = piece.getPossibleMoves(self.board)[0]+ piece.getPossibleMoves(self.board)[1]
             for move in possibleMoves:
                 destination = move[1]
                 pygame.draw.rect(self.window, pygame.Color("red"), pygame.Rect(destination[0]*SQ_SIZE, destination[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))

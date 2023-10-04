@@ -2,7 +2,7 @@
 ai.py: Implement the AI logic using minimax and alpha-beta pruning.
 """
 
-from board import Board
+from board import *
 from pieces02 import Piece
 import math
 
@@ -26,30 +26,6 @@ def evaluateBoard(board: Board) -> int:
 
     return boardScore
 
-# def isValid(board: Board, move: str) -> bool:
-#     """
-#     Check if a move is valid or not.
-
-#     Args:
-#     board (Board): A chess board as a Board object.
-#     move (list[tuple]): The move to be checked (A move is represented in this format: [source (tuple), destination (tuple)])
-
-#     Returns:
-#     True if a move is valid, False otherwise.
-#     """
-#     source = move[0]
-#     destination = move[1]
-
-#     # Check if the source position is occupied by a piece.
-#     source_piece = board.getPieceAt(source)
-#     if source_piece is None:
-#         return False
-
-#     # Check if the destination position is empty or occupied by an enemy piece.
-#     destination_piece = board.getPieceAt(destination)
-#     if destination_piece is not None and destination_piece.color == source_piece.color:
-#         return False
-
 def getValidMoves(board: Board) -> list[list[tuple]]:
     """
     Generate all the possible moves from the given board.
@@ -60,12 +36,20 @@ def getValidMoves(board: Board) -> list[list[tuple]]:
     Returns:
     list[list[tuple]]: List of all the valid moves.
     """
+    orderedMoves = []
     if board.currentPlayer == Piece.WHITE:
-        valid_moves = [move for piece in board.listOfWhitePieces for move in piece.getPossibleMoves(board)]
+        for piece in board.listOfWhitePieces:
+            piecePossibleMoves = piece.getPossibleMoves(board)
+            orderedMoves = piecePossibleMoves[0] + orderedMoves
+            orderedMoves += piecePossibleMoves[1]
     else:
-        valid_moves = [move for piece in board.listOfBlackPieces for move in piece.getPossibleMoves(board)]
+        for piece in board.listOfBlackPieces:
+            piecePossibleMoves = piece.getPossibleMoves(board)
+            orderedMoves = piecePossibleMoves[0] + orderedMoves
+            orderedMoves += piecePossibleMoves[1]
 
-    return valid_moves
+    return orderedMoves
+
 
 def getResultBoard(board:Board, move):
     """
@@ -82,48 +66,6 @@ def getResultBoard(board:Board, move):
     resultBoard.movePiece(move)
     return resultBoard
 
-# def getMaxValueAndMove(board: Board, currentDepth, alpha_beta):
-#     alpha, beta = alpha_beta
-#     if board.isOver() or currentDepth == Board.DEPTH_LIMIT:
-#         return (evaluateBoard(board=board), None)
-
-#     moves = getValidMoves(board=board)
-#     max_val = -math.inf
-#     play = moves[0]
-
-#     for move in moves:
-#         min_val = getMinValueAndMove(getResultBoard(board, move=move), currentDepth+1, alpha_beta)[0]
-#         if min_val > max_val:
-#             max_val = min_val
-#             play = move
-#         alpha = max(alpha, max_val)
-#         if beta <= alpha:
-#             break
-
-#     alpha_beta[0] = alpha
-#     return (max_val, play)
-
-# def getMinValueAndMove(board: Board, currentDepth, alpha_beta):
-#     alpha, beta = alpha_beta
-#     if board.isOver() or currentDepth == Board.DEPTH_LIMIT:
-#         return (evaluateBoard(board=board), None)
-
-#     moves = getValidMoves(board=board)
-#     min_val = math.inf
-#     play = moves[0]
-
-#     for move in moves:
-#         max_val = getMaxValueAndMove(getResultBoard(board, move=move), currentDepth+1, alpha_beta)[0]
-#         if max_val < min_val:
-#             min_val = max_val
-#             play = move
-#         beta = min(beta, min_val)
-#         if beta <= alpha:
-#             break
-
-#     alpha_beta[1] = beta
-#     return (min_val, play)
-
 def minimax(board, depth, alpha, beta):
    if depth == 0 or board.isOver():
        return None, evaluateBoard(board)
@@ -132,7 +74,7 @@ def minimax(board, depth, alpha, beta):
        max_val = -math.inf
        for move in getValidMoves(board=board):
            min_val = minimax(getResultBoard(board, move=move), depth - 1, alpha, beta)[1]
-           if min_val >= max_val:
+           if min_val > max_val:
                max_val = min_val
                best_move = move
            alpha = max(alpha, min_val)
@@ -143,7 +85,7 @@ def minimax(board, depth, alpha, beta):
        min_val = math.inf
        for move in getValidMoves(board=board):
            max_val = minimax(getResultBoard(board, move=move), depth - 1, alpha, beta)[1]
-           if max_val <= min_val:
+           if max_val < min_val:
                min_val = max_val
                best_move = move
            beta = min(beta, max_val)
@@ -161,5 +103,10 @@ def getBestMove(board: Board):
     Returns:
     list(tuple): The best possible move for the given board (A move is represented in this format: [source (tuple), destination (tuple)]).
     """
-
+    if board.isInOpeningPhase:
+        openingMove = getOpeningMove(board.toString())
+        if openingMove != None:
+            return openingMove
+        else:
+            board.isInOpeningPhase = False
     return minimax(board, depth=Board.DEPTH_LIMIT, alpha = -math.inf, beta = math.inf)[0]

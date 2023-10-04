@@ -2,40 +2,61 @@
 board.py: Define the chess board and its operations
 """
 from pieces02 import *
+from opening_moves import *
+
+opening_moves_database = {
+    # FEN string for the starting position
+    # 'start_position': {
+    #     'moves': [],  # No moves for the starting position
+    # },
+
+    # FEN string after 1. d4
+    'bRbNbBbQbKbBbNbR/bPbPbPbPbPbPbPbP/8/8/4wP3/8/wPwPwPwP1wPwPwP/ b': {
+        'moves': ['e7e5', 'e7e6'],  # Black responds with 1... e6
+    },
+}
 
 class Board():
     DEPTH_LIMIT = 4
 
     def __init__(self, currentPlayer) -> None:
-        
-        # TODO
-
         self.currentPlayer = currentPlayer
+        self.isInOpeningPhase = True
 
         # Initialize pieces
-        self.listOfWhitePieces = [Rook(x=7, y=7, color=Piece.WHITE),
-                                  Rook(x=0, y=7, color=Piece.WHITE),
+        self.listOfWhitePieces = [Pawn(4, 6, Piece.WHITE),
+                                  Pawn(3, 6, Piece.WHITE),
                                   Knight(x=1, y=7, color=Piece.WHITE),
                                   Knight(x=6, y=7, color=Piece.WHITE),
+                                  Pawn(2, 6, Piece.WHITE),
+                                  Pawn(5, 6, Piece.WHITE),
+                                  Pawn(0, 6, Piece.WHITE),
+                                  Pawn(7, 6, Piece.WHITE),
+                                  Pawn(1, 6, Piece.WHITE),
+                                  Pawn(6, 6, Piece.WHITE),
                                   Bishop(x=2, y=7, color=Piece.WHITE),
                                   Bishop(x=5, y=7, color=Piece.WHITE),
                                   Queen(x=3, y=7, color=Piece.WHITE),
+                                  Rook(x=7, y=7, color=Piece.WHITE),
+                                  Rook(x=0, y=7, color=Piece.WHITE),
                                   King(x=4, y=7, color=Piece.WHITE)]
-                                
-
-        self.listOfBlackPieces = [Rook(x=0, y=0, color=Piece.BLACK),
-                                  Rook(x=7, y=0, color=Piece.BLACK),
+        
+        self.listOfBlackPieces = [Pawn(4, 1, Piece.BLACK),
+                                  Pawn(3, 1, Piece.BLACK),
                                   Knight(x=1, y=0, color=Piece.BLACK),
                                   Knight(x=6, y=0, color=Piece.BLACK),
+                                  Pawn(2, 1, Piece.BLACK),
+                                  Pawn(5, 1, Piece.BLACK),
+                                  Pawn(0, 1, Piece.BLACK),
+                                  Pawn(7, 1, Piece.BLACK),
+                                  Pawn(1, 1, Piece.BLACK),
+                                  Pawn(6, 1, Piece.BLACK),
                                   Bishop(x=2, y=0, color=Piece.BLACK),
                                   Bishop(x=5, y=0, color=Piece.BLACK),
                                   Queen(x=3, y=0, color=Piece.BLACK),
+                                  Rook(x=7, y=0, color=Piece.BLACK),
+                                  Rook(x=0, y=0, color=Piece.BLACK),
                                   King(x=4, y=0, color=Piece.BLACK)]
-        
-        for i in range(8):
-            self.listOfWhitePieces.append(Pawn(i, 6, Piece.WHITE))
-            self.listOfBlackPieces.append(Pawn(i, 1, Piece.BLACK))
-            
     def copy(self):
         """
         Create a copy of the current board.
@@ -52,10 +73,37 @@ class Board():
         boardCopy.listOfWhitePieces = [piece.copy() for piece in self.listOfWhitePieces]
         boardCopy.listOfBlackPieces = [piece.copy() for piece in self.listOfBlackPieces]
 
-        # boardCopy.board = [[piece for piece in row] for row in self.board]
-
         return boardCopy
     
+    def toString(self):
+        """
+        Convert the current state of the board to a FEN string.
+
+        Returns:
+        str: The FEN representation of the board.
+        """
+        fen = ""
+        
+        # Convert the board's piece positions to FEN
+        for y in range(0, 7):
+            empty_squares = 0
+            for x in range(8):
+                piece = self.getPieceAt((x, y))
+                if piece is None:
+                    empty_squares += 1
+                else:
+                    if empty_squares > 0:
+                        fen += str(empty_squares)
+                        empty_squares = 0
+                    fen += piece.toString()
+            if empty_squares > 0:
+                fen += str(empty_squares)
+            fen += '/'
+        
+        fen += ' ' + ('w' if self.currentPlayer == Piece.WHITE else 'b')
+        
+        return fen
+
     def getPieceAt(self, coordinate: tuple) -> Piece:
         """
         Return a chess piece at the given coodinate
