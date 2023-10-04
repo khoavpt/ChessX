@@ -12,9 +12,7 @@ ROWS = 8
 COLS = 8
 FPS = 30
 WHITE = (255, 255, 255)
-GRAY = (169, 169, 169)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
+GRAY = (180, 180, 180)
 ALPHACOLS = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}
 
 class Game:
@@ -39,9 +37,9 @@ class Game:
     def gameLoop(self):
         while True:
             self.drawBoardGame()
-            self.drawPossibleMoves()
             self.drawSelectedPiece()    
             self.drawLastMove()
+            self.drawPossibleMoves()
             self.drawPieces()
 
             if self.board.currentPlayer == Piece.BLACK:
@@ -112,7 +110,12 @@ class Game:
             possibleMoves = piece.getPossibleMoves(self.board)[0]+ piece.getPossibleMoves(self.board)[1]
             for move in possibleMoves:
                 destination = move[1]
-                pygame.draw.rect(self.window, pygame.Color("red"), pygame.Rect(destination[0]*SQ_SIZE, destination[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+                color = ()
+                if (destination[0] + destination[1]) % 2 == 0:
+                    color = (255, 128, 128)
+                else:
+                    color = (218, 90, 90)
+                pygame.draw.rect(self.window, color, pygame.Rect(destination[0]*SQ_SIZE, destination[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
     def drawLastMove(self):
         if self.lastMove:
@@ -120,7 +123,12 @@ class Game:
             destination = self.lastMove[1]
 
             for pos in [source, destination]:
-                pygame.draw.rect(self.window, pygame.Color("yellow"), pygame.Rect(pos[0]*SQ_SIZE, pos[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+                color = ()
+                if (destination[0] + destination[1]) % 2 == 0:
+                    color = (244, 240, 173)
+                else:
+                    color = (206, 202, 136)
+                pygame.draw.rect(self.window, color, pygame.Rect(pos[0]*SQ_SIZE, pos[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
     def drawBoardGame(self):
         for row in range(ROWS):
