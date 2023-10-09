@@ -7,6 +7,7 @@ import ai
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 640
 WINDOW_TITLE = "ChessX"
+FONT = 'monospace'
 SQ_SIZE = 80
 ROWS = 8
 COLS = 8
@@ -22,11 +23,10 @@ class Game:
         pygame.display.set_caption(WINDOW_TITLE)
         self.clock = pygame.time.Clock()
         self.board = Board(Piece.WHITE)
-        self.font = pygame.font.SysFont('monospace', 18, bold=True)
+        self.font = pygame.font.SysFont(FONT, 18, bold=True)
         self.loadImages()
         self.selected = None
         self.lastMove = None
-        self.highlights = []
 
     def loadImages(self):
             pieces = ["wP", "wR", "wN", "wB", "wQ", "wK", "bP", "bR", "bN", "bB", "bQ", "bK"]
@@ -54,6 +54,10 @@ class Game:
                     pygame.quit()
                     quit(0)
 
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.__init__()
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     if self.board.currentPlayer == Piece.WHITE:
@@ -74,7 +78,6 @@ class Game:
                                     print(self.board.toString())
                             self.selected = None
                                     
-
             pygame.display.flip()
 
     def move(self, move):
@@ -87,7 +90,11 @@ class Game:
     def drawSelectedPiece(self):
         if self.selected:
             selectedPiece = self.selected
-            pygame.draw.rect(self.window, pygame.Color("yellow"), pygame.Rect(selectedPiece.x*SQ_SIZE, selectedPiece.y*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+            if (selectedPiece.x + selectedPiece.y) % 2 == 0:
+                color = (244, 240, 173)
+            else:
+                color = (206, 202, 136)
+            pygame.draw.rect(self.window, pygame.Color(color), pygame.Rect(selectedPiece.x*SQ_SIZE, selectedPiece.y*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
     def drawPieces(self):
         for piece in self.board.listOfWhitePieces:
@@ -107,14 +114,26 @@ class Game:
     def drawPossibleMoves(self):
         if self.selected:
             piece = self.selected
-            possibleMoves = piece.getPossibleMoves(self.board)[0]+ piece.getPossibleMoves(self.board)[1]
-            for move in possibleMoves:
+            captureMoves = piece.getPossibleMoves(self.board)[0]
+            for move in captureMoves:
                 destination = move[1]
                 color = ()
                 if (destination[0] + destination[1]) % 2 == 0:
+                    # color = (193, 244, 240)
                     color = (255, 128, 128)
                 else:
                     color = (218, 90, 90)
+                    # color = (65, 116, 113)
+                pygame.draw.rect(self.window, color, pygame.Rect(destination[0]*SQ_SIZE, destination[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+            nonCaptureMoves = piece.getPossibleMoves(self.board)[1]
+            for move in nonCaptureMoves:
+                destination = move[1]
+                color = ()
+                if (destination[0] + destination[1]) % 2 == 0:
+                    color = (193, 244, 240)
+                else:
+                    color = (65, 116, 113)
                 pygame.draw.rect(self.window, color, pygame.Rect(destination[0]*SQ_SIZE, destination[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
     def drawLastMove(self):
@@ -124,7 +143,7 @@ class Game:
 
             for pos in [source, destination]:
                 color = ()
-                if (destination[0] + destination[1]) % 2 == 0:
+                if (pos[0] + pos[1]) % 2 == 0:
                     color = (244, 240, 173)
                 else:
                     color = (206, 202, 136)
