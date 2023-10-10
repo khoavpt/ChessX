@@ -173,7 +173,7 @@ class Board():
                 if source[0] - destination[0] > 1:
                     self.getPieceAt((0,7)).moveTo((3, 7))
                 elif destination[0] - source[0] > 1:
-                    self.getPieceAt((7,0)).moveTo((5, 7))
+                    self.getPieceAt((7,7)).moveTo((5, 7))
             # Else if the piece moved is a Pawn, check for Pawn promotion.
             elif type(piece) == Pawn and piece.y == 0:
                 self.listOfWhitePieces.append(Queen(x=piece.x, y=piece.y, color=Piece.WHITE))

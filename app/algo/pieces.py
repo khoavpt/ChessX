@@ -146,72 +146,18 @@ class King(Piece):
                  [(self.x, self.y), (self.x-1, self.y-1)],
                  [(self.x, self.y), (self.x, self.y-1)],
                  [(self.x, self.y), (self.x+1, self.y-1)]]
-        if not self.has_moved:
-            if self.color == "white":
-                if board.getPieceAt((5, self.y)) == None and board.getPieceAt((6, self.y)) == None:
-                    
-                    moves.append([(self.x, self.y), (6, self.y)])
-            elif self.color == "black":
-                if board.getPieceAt((5, self.y)) == None and board.getPieceAt((6, self.y)) == None:
-                    moves.append([(self.x, self.y), (6, self.y)])
-
-            if self.color == "white":
-                if board.getPieceAt((3, self.y)) == None and board.getPieceAt((2, self.y)) == None and board.getPieceAt((1, self.y)) == None:
-                    moves.append([(self.x, self.y), (2, self.y)])
-            elif self.color == "black":
-                if board.getPieceAt((3, self.y)) == None and board.getPieceAt((2, self.y)) == None and board.getPieceAt((1, self.y)) == None:
-                    moves.append([(self.x, self.y), (2, self.y)])
+        
+        if self.has_moved == False:
+            if board.getPieceAt((5, self.y)) == None and board.getPieceAt((6, self.y)) == None and type(board.getPieceAt((7, self.y))) == Rook:
+                moves.append([(self.x, self.y), (6, self.y)])
+            elif board.getPieceAt((3, self.y)) == None and board.getPieceAt((2, self.y)) == None and board.getPieceAt((1, self.y)) == None and type(board.getPieceAt((0, self.y))) == Rook:
+                moves.append([(self.x, self.y), (2, self.y)])
 
         return self.getValidMovesFromList(moves, board)
-        '''moves.append(self.get_castle_kingside_move())
-        # moves.append(self.get_castle_queenside_move())
     
-    # def get_castle_kingside_move(self, board):
-        
-    #     piece_in_corner = board.getPieceAt(self.x+3, self.y)
-    #     if (piece_in_corner == 0 or piece_in_corner.piece_type != Rook.PIECE_TYPE):
-    #         return 0
-
-        
-    #     if (piece_in_corner.color != self.color):
-    #         return 0
-        
-        
-    #     if (self.color == Piece.WHITE and board.white_king_moved):
-    #         return 0
-        
-    #     if (self.color == Piece.BLACK and board.black_king_moved):
-    #         return 0
-
-        
-    #     if (board.getPieceAt(self.x+1, self.y) != 0 or board.getPieceAt(self.x+2, self.y) != 0):
-    #         return 0
-        
-    #     return Move(self.x, self.y, self.x+2, self.y)
-    # #Nhập thành bên có hậu
-    # def get_castle_queenside_move(self, board):
-        
-    #     piece_in_corner = board.getPieceAt(self.x-4, self.y)
-    #     if (piece_in_corner == 0 or piece_in_corner.piece_type != Rook.PIECE_TYPE):
-    #         return 0
-
-        
-    #     if (piece_in_corner.color != self.color):
-    #         return 0
-        
-        
-    #     if (self.color == Piece.WHITE and board.white_king_moved):
-    #         return 0
-        
-    #     if (self.color == Piece.BLACK and board.black_king_moved):
-    #         return 0
-
-        
-    #     if (board.getPieceAt(self.x-1, self.y) != 0 or board.getPieceAt(self.x-2, self.y) != 0 or board.getPieceAt(self.x-3, self.y) != 0):
-    #         return 0
-        
-    #     return Move(self.x, self.y, self.x-2, self.y)'''
-
+    def moveTo(self, coordinate: tuple) -> None:
+        super().moveTo(coordinate)
+        self.has_moved = True
 
     def copy(self):
         return King(self.x, self.y, self.color)
