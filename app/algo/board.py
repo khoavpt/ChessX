@@ -146,8 +146,7 @@ class Board():
         if kingsCount != 2:
             return True
         return False
-    
-    
+
     def movePiece(self, move: list[tuple]) -> None:
         """
         Perform a move on the board and update all the board attributes
@@ -165,17 +164,38 @@ class Board():
         pieceAtDestination = self.getPieceAt(destination)
         piece.moveTo(destination)
 
-        # If there's a different colored piece at the destination, remove it.
-        if pieceAtDestination != None:
-            if piece.color == Piece.WHITE and pieceAtDestination.color == Piece.BLACK:
+        if piece.color == Piece.WHITE:
+            # If there's a different colored piece at the destination, remove it.
+            if pieceAtDestination != None:
                 self.listOfBlackPieces.remove(pieceAtDestination)
-            else:
-                self.listOfWhitePieces.remove(pieceAtDestination)
-
-        # Switch turn after the move is made.
-        if (self.currentPlayer == Piece.WHITE):
+            # If the piece moved is a King, check for castle moves.
+            if type(piece) == King:
+                if source[0] - destination[0] > 1:
+                    self.getPieceAt((0,7)).moveTo((3, 7))
+                elif destination[0] - source[0] > 1:
+                    self.getPieceAt((7,0)).moveTo((5, 7))
+            # Else if the piece moved is a Pawn, check for Pawn promotion.
+            elif type(piece) == Pawn and piece.y == 0:
+                self.listOfWhitePieces.append(Queen(x=piece.x, y=piece.y, color=Piece.WHITE))
+                self.listOfWhitePieces.remove(piece)
+            
+            # Switch turn after the move is made.
             self.currentPlayer = Piece.BLACK
-        else:
-            self.currentPlayer = Piece.WHITE
+        
+        elif piece.color == Piece.BLACK:
+            # If there's a different colored piece at the destination, remove it.
+            if pieceAtDestination != None:
+                self.listOfWhitePieces.remove(pieceAtDestination)
+            # If the piece moved is a King, check for castle moves.
+            if type(piece) == King:
+                if source[0] - destination[0] > 1:
+                    self.getPieceAt((0,0)).moveTo((3, 0))
+                elif destination[0] - source[0] > 1:
+                    self.getPieceAt((7,0)).moveTo((5, 0))
+            # Else if the piece moved is a Pawn, check for Pawn promotion.
+            elif type(piece) == Pawn and piece.y == 7:
+                self.listOfBlackPieces.append(Queen(x=piece.x, y=piece.y, color=Piece.BLACK))
+                self.listOfBlackPieces.remove(piece)
 
-        return
+            # Switch turn after the move is made.
+            self.currentPlayer = Piece.WHITE
