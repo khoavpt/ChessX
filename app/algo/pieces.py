@@ -135,6 +135,8 @@ class King(Piece):
     VALUE = 900
     def __init__(self, x, y, color):
         super(King, self).__init__(x, y, color, King.PIECE_TYPE, King.VALUE)
+        self.has_moved = False
+    
     def getPossibleMoves(self, board):
         moves = [[(self.x, self.y), (self.x+1, self.y)],
                  [(self.x, self.y), (self.x+1, self.y+1)],
@@ -144,6 +146,21 @@ class King(Piece):
                  [(self.x, self.y), (self.x-1, self.y-1)],
                  [(self.x, self.y), (self.x, self.y-1)],
                  [(self.x, self.y), (self.x+1, self.y-1)]]
+        if not self.has_moved:
+            if self.color == "white":
+                if board.getPieceAt((5, self.y)) == None and board.getPieceAt((6, self.y)) == None:
+                    
+                    moves.append([(self.x, self.y), (6, self.y)])
+            elif self.color == "black":
+                if board.getPieceAt((5, self.y)) == None and board.getPieceAt((6, self.y)) == None:
+                    moves.append([(self.x, self.y), (6, self.y)])
+
+            if self.color == "white":
+                if board.getPieceAt((3, self.y)) == None and board.getPieceAt((2, self.y)) == None and board.getPieceAt((1, self.y)) == None:
+                    moves.append([(self.x, self.y), (2, self.y)])
+            elif self.color == "black":
+                if board.getPieceAt((3, self.y)) == None and board.getPieceAt((2, self.y)) == None and board.getPieceAt((1, self.y)) == None:
+                    moves.append([(self.x, self.y), (2, self.y)])
 
         return self.getValidMovesFromList(moves, board)
         '''moves.append(self.get_castle_kingside_move())
