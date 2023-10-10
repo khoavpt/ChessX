@@ -17,46 +17,83 @@ opening_moves_database = {
 }
 
 class Board():
-    DEPTH_LIMIT = 5
+    DEPTH_LIMIT = 4
 
-    def __init__(self, currentPlayer) -> None:
+    def __init__(self, currentPlayer, playerColor) -> None:
+        self.playerColor = playerColor
         self.currentPlayer = currentPlayer
         self.isInOpeningPhase = True
 
         # Initialize pieces
-        self.listOfWhitePieces = [Pawn(4, 6, Piece.WHITE),
-                                  Pawn(3, 6, Piece.WHITE),
-                                  Knight(x=1, y=7, color=Piece.WHITE),
-                                  Knight(x=6, y=7, color=Piece.WHITE),
-                                  Pawn(2, 6, Piece.WHITE),
-                                  Pawn(5, 6, Piece.WHITE),
-                                  Pawn(0, 6, Piece.WHITE),
-                                  Pawn(7, 6, Piece.WHITE),
-                                  Pawn(1, 6, Piece.WHITE),
-                                  Pawn(6, 6, Piece.WHITE),
-                                  Bishop(x=2, y=7, color=Piece.WHITE),
-                                  Bishop(x=5, y=7, color=Piece.WHITE),
-                                  Queen(x=3, y=7, color=Piece.WHITE),
-                                  Rook(x=7, y=7, color=Piece.WHITE),
-                                  Rook(x=0, y=7, color=Piece.WHITE),
-                                  King(x=4, y=7, color=Piece.WHITE)]
-        
-        self.listOfBlackPieces = [Pawn(4, 1, Piece.BLACK),
-                                  Pawn(3, 1, Piece.BLACK),
-                                  Knight(x=1, y=0, color=Piece.BLACK),
-                                  Knight(x=6, y=0, color=Piece.BLACK),
-                                  Pawn(2, 1, Piece.BLACK),
-                                  Pawn(5, 1, Piece.BLACK),
-                                  Pawn(0, 1, Piece.BLACK),
-                                  Pawn(7, 1, Piece.BLACK),
-                                  Pawn(1, 1, Piece.BLACK),
-                                  Pawn(6, 1, Piece.BLACK),
-                                  Bishop(x=2, y=0, color=Piece.BLACK),
-                                  Bishop(x=5, y=0, color=Piece.BLACK),
-                                  Queen(x=3, y=0, color=Piece.BLACK),
-                                  Rook(x=7, y=0, color=Piece.BLACK),
-                                  Rook(x=0, y=0, color=Piece.BLACK),
-                                  King(x=4, y=0, color=Piece.BLACK)]
+        if playerColor == Piece.WHITE:
+            self.listOfWhitePieces = [Pawn(4, 6, Piece.WHITE),
+                                    Pawn(3, 6, Piece.WHITE),
+                                    Knight(x=1, y=7, color=Piece.WHITE),
+                                    Knight(x=6, y=7, color=Piece.WHITE),
+                                    Pawn(2, 6, Piece.WHITE),
+                                    Pawn(5, 6, Piece.WHITE),
+                                    Pawn(0, 6, Piece.WHITE),
+                                    Pawn(7, 6, Piece.WHITE),
+                                    Pawn(1, 6, Piece.WHITE),
+                                    Pawn(6, 6, Piece.WHITE),
+                                    Bishop(x=2, y=7, color=Piece.WHITE),
+                                    Bishop(x=5, y=7, color=Piece.WHITE),
+                                    Queen(x=3, y=7, color=Piece.WHITE),
+                                    Rook(x=7, y=7, color=Piece.WHITE),
+                                    Rook(x=0, y=7, color=Piece.WHITE),
+                                    King(x=4, y=7, color=Piece.WHITE)]
+            
+            self.listOfBlackPieces = [Pawn(4, 1, Piece.BLACK),
+                                    Pawn(3, 1, Piece.BLACK),
+                                    Knight(x=1, y=0, color=Piece.BLACK),
+                                    Knight(x=6, y=0, color=Piece.BLACK),
+                                    Pawn(2, 1, Piece.BLACK),
+                                    Pawn(5, 1, Piece.BLACK),
+                                    Pawn(0, 1, Piece.BLACK),
+                                    Pawn(7, 1, Piece.BLACK),
+                                    Pawn(1, 1, Piece.BLACK),
+                                    Pawn(6, 1, Piece.BLACK),
+                                    Bishop(x=2, y=0, color=Piece.BLACK),
+                                    Bishop(x=5, y=0, color=Piece.BLACK),
+                                    Queen(x=3, y=0, color=Piece.BLACK),
+                                    Rook(x=7, y=0, color=Piece.BLACK),
+                                    Rook(x=0, y=0, color=Piece.BLACK),
+                                    King(x=4, y=0, color=Piece.BLACK)]
+        else:
+            self.listOfWhitePieces = [Pawn(4, 1, Piece.WHITE),
+                                    Pawn(3, 1, Piece.WHITE),
+                                    Knight(x=1, y=0, color=Piece.WHITE),
+                                    Knight(x=6, y=0, color=Piece.WHITE),
+                                    Pawn(2, 1, Piece.WHITE),
+                                    Pawn(5, 1, Piece.WHITE),
+                                    Pawn(0, 1, Piece.WHITE),
+                                    Pawn(7, 1, Piece.WHITE),
+                                    Pawn(1, 1, Piece.WHITE),
+                                    Pawn(6, 1, Piece.WHITE),
+                                    Bishop(x=2, y=0, color=Piece.WHITE),
+                                    Bishop(x=5, y=0, color=Piece.WHITE),
+                                    Queen(x=4, y=0, color=Piece.WHITE),
+                                    Rook(x=7, y=0, color=Piece.WHITE),
+                                    Rook(x=0, y=0, color=Piece.WHITE),
+                                    King(x=3, y=0, color=Piece.WHITE)]
+            
+            self.listOfBlackPieces = [Pawn(4, 6, Piece.BLACK),
+                                    Pawn(3, 6, Piece.BLACK),
+                                    Knight(x=1, y=7, color=Piece.BLACK),
+                                    Knight(x=6, y=7, color=Piece.BLACK),
+                                    Pawn(2, 6, Piece.BLACK),
+                                    Pawn(5, 6, Piece.BLACK),
+                                    Pawn(0, 6, Piece.BLACK),
+                                    Pawn(7, 6, Piece.BLACK),
+                                    Pawn(1, 6, Piece.BLACK),
+                                    Pawn(6, 6, Piece.BLACK),
+                                    Bishop(x=2, y=7, color=Piece.BLACK),
+                                    Bishop(x=5, y=7, color=Piece.BLACK),
+                                    Queen(x=4, y=7, color=Piece.BLACK),
+                                    Rook(x=7, y=7, color=Piece.BLACK),
+                                    Rook(x=0, y=7, color=Piece.BLACK),
+                                    King(x=3, y=7, color=Piece.BLACK)]
+            
     def copy(self):
         """
         Create a copy of the current board.
@@ -68,7 +105,7 @@ class Board():
         Board: A copy of the current board.
         """
 
-        boardCopy = Board(currentPlayer=self.currentPlayer)
+        boardCopy = Board(currentPlayer=self.currentPlayer, playerColor=self.playerColor)
 
         boardCopy.listOfWhitePieces = [piece.copy() for piece in self.listOfWhitePieces]
         boardCopy.listOfBlackPieces = [piece.copy() for piece in self.listOfBlackPieces]
