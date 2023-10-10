@@ -2,8 +2,8 @@
 ai.py: Implement the AI logic using minimax and alpha-beta pruning.
 """
 
-from board import *
-from pieces02 import Piece
+from algo.board import *
+from algo.pieces import Piece
 import math
 
 def evaluateBoard(board: Board) -> int:

@@ -1,0 +1,11 @@
+WINDOW_WIDTH = 640
+WINDOW_HEIGHT = 640
+WINDOW_TITLE = "ChessX"
+FONT = 'monospace'
+SQ_SIZE = 80
+ROWS = 8
+COLS = 8
+FPS = 30
+WHITE = (255, 255, 255)
+GRAY = (180, 180, 180)
+ALPHACOLS = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}
