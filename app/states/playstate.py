@@ -32,6 +32,9 @@ class PlayState(State):
                 if self.board.currentPlayer == self.game.playerColor:
                     row = mouse_pos[0] // SQ_SIZE
                     col = mouse_pos[1] // SQ_SIZE
+                    if self.game.playerColor == Piece.BLACK:
+                        row = 7 - row
+                        col = 7 - col
                     if not self.selected:
                         piece = self.board.getPieceAt((row, col))
                         if piece.color == self.game.playerColor:
@@ -67,22 +70,37 @@ class PlayState(State):
                 color = (244, 240, 173)
             else:
                 color = (206, 202, 136)
-            pygame.draw.rect(self.game.window, pygame.Color(color), pygame.Rect(selectedPiece.x*SQ_SIZE, selectedPiece.y*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+            posX = selectedPiece.x
+            posY = selectedPiece.y
+            if self.game.playerColor == Piece.BLACK:
+                posX = 7 - posX
+                posY = 7 - posY
+            pygame.draw.rect(self.game.window, pygame.Color(color), pygame.Rect(posX*SQ_SIZE, posY*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
     def drawPieces(self):
         for piece in self.board.listOfWhitePieces:
             image = self.game.images[f"w{piece.pieceType}"]
 
             # Tính toán vị trí để đặt hình ảnh vào giữa ô vuông
-            x = piece.x * SQ_SIZE + (SQ_SIZE - image.get_width()) // 2
-            y = piece.y * SQ_SIZE + (SQ_SIZE - image.get_height()) // 2
+            if self.game.playerColor == Piece.WHITE:
+                x = piece.x * SQ_SIZE + (SQ_SIZE - image.get_width()) // 2
+                y = piece.y * SQ_SIZE + (SQ_SIZE - image.get_height()) // 2
+            else:
+                x = (7-piece.x) * SQ_SIZE + (SQ_SIZE - image.get_width()) // 2
+                y = (7-piece.y) * SQ_SIZE + (SQ_SIZE - image.get_height()) // 2
+            
             self.game.window.blit(self.game.images[f"w{piece.pieceType}"], pygame.Rect(x, y, SQ_SIZE, SQ_SIZE))
 
         for piece in self.board.listOfBlackPieces:
             image = self.game.images[f"b{piece.pieceType}"]
             # Tính toán vị trí để đặt hình ảnh vào giữa ô vuông
-            x = piece.x * SQ_SIZE + (SQ_SIZE - image.get_width()) // 2
-            y = piece.y * SQ_SIZE + (SQ_SIZE - image.get_height()) // 2
+            if self.game.playerColor == Piece.WHITE:
+                x = piece.x * SQ_SIZE + (SQ_SIZE - image.get_width()) // 2
+                y = piece.y * SQ_SIZE + (SQ_SIZE - image.get_height()) // 2
+            else:
+                x = (7-piece.x) * SQ_SIZE + (SQ_SIZE - image.get_width()) // 2
+                y = (7-piece.y) * SQ_SIZE + (SQ_SIZE - image.get_height()) // 2
             self.game.window.blit(self.game.images[f"b{piece.pieceType}"], pygame.Rect(x, y, SQ_SIZE, SQ_SIZE))
 
     def drawPossibleMoves(self):
@@ -96,7 +114,13 @@ class PlayState(State):
                     color = (255, 128, 128)
                 else:
                     color = (218, 90, 90)
-                pygame.draw.rect(self.game.window, color, pygame.Rect(destination[0]*SQ_SIZE, destination[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+                posX = destination[0]
+                posY = destination[1]
+                if self.game.playerColor == Piece.BLACK:
+                    posX = 7 - posX
+                    posY = 7 - posY
+                pygame.draw.rect(self.game.window, color, pygame.Rect(posX*SQ_SIZE, posY*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
             nonCaptureMoves = piece.getPossibleMoves(self.board)[1]
             for move in nonCaptureMoves:
@@ -106,7 +130,13 @@ class PlayState(State):
                     color = (136, 240, 252)
                 else:
                     color = (98, 202, 215)
-                pygame.draw.rect(self.game.window, color, pygame.Rect(destination[0]*SQ_SIZE, destination[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+                posX = destination[0]
+                posY = destination[1]
+                if self.game.playerColor == Piece.BLACK:
+                    posX = 7 - posX
+                    posY = 7 - posY
+                pygame.draw.rect(self.game.window, color, pygame.Rect(posX*SQ_SIZE, posY*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
     def drawLastMove(self):
         if self.lastMove:
@@ -119,7 +149,13 @@ class PlayState(State):
                     color = (244, 240, 173)
                 else:
                     color = (206, 202, 136)
-                pygame.draw.rect(self.game.window, color, pygame.Rect(pos[0]*SQ_SIZE, pos[1]*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+                posX = pos[0]
+                posY = pos[1]
+                if self.game.playerColor == Piece.BLACK:
+                    posX = 7 - posX
+                    posY = 7 - posY
+                pygame.draw.rect(self.game.window, color, pygame.Rect(posX*SQ_SIZE, posY*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
     def drawBoardGame(self):
         for row in range(ROWS):
