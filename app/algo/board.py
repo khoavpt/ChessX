@@ -1,8 +1,8 @@
 """
 board.py: Define the chess board and its operations
 """
-from pieces02 import *
-from opening_moves import *
+from algo.pieces import *
+from algo.opening_moves import *
 
 opening_moves_database = {
     # FEN string for the starting position
@@ -17,7 +17,7 @@ opening_moves_database = {
 }
 
 class Board():
-    DEPTH_LIMIT = 4
+    DEPTH_LIMIT = 5
 
     def __init__(self, currentPlayer) -> None:
         self.currentPlayer = currentPlayer
