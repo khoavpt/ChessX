@@ -147,10 +147,11 @@ class King(Piece):
                  [(self.x, self.y), (self.x, self.y-1)],
                  [(self.x, self.y), (self.x+1, self.y-1)]]
         
+        # Check if castling is available
         if self.has_moved == False:
             if board.getPieceAt((5, self.y)) == None and board.getPieceAt((6, self.y)) == None and type(board.getPieceAt((7, self.y))) == Rook:
                 moves.append([(self.x, self.y), (6, self.y)])
-            elif board.getPieceAt((3, self.y)) == None and board.getPieceAt((2, self.y)) == None and board.getPieceAt((1, self.y)) == None and type(board.getPieceAt((0, self.y))) == Rook:
+            if board.getPieceAt((3, self.y)) == None and board.getPieceAt((2, self.y)) == None and board.getPieceAt((1, self.y)) == None and type(board.getPieceAt((0, self.y))) == Rook:
                 moves.append([(self.x, self.y), (2, self.y)])
 
         return self.getValidMovesFromList(moves, board)

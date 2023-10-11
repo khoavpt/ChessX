@@ -16,7 +16,7 @@ openingMovesDatabase = {
     # w:d4 b:d5 
     'bRbNbBbQbKbBbNbR/bPbPbP1bPbPbPbP/8/3bP4/3wP4/8/wPwPwP1wPwPwPwP/ w': ['c2c4','c1g5'],
     # w:e4 b:c5 w:Nf3
-    'bRbNbBbQbKbBbNbR/bPbP1bPbPbPbPbP/8/2bP5/4wP3/5wN2/wPwPwPwP1wPwPwP/ b': ['d7d6','Nc6',],
+    'bRbNbBbQbKbBbNbR/bPbP1bPbPbPbPbP/8/2bP5/4wP3/5wN2/wPwPwPwP1wPwPwP/ b': ['d7d6','b8c6',],
     # w:e4 b:c5 w:c3
     'bRbNbBbQbKbBbNbR/bPbP1bPbPbPbPbP/8/2bP5/4wP3/2wP5/wPwP1wP1wPwPwP/ b': ['g8f6', 'd7d5'],
     # w:e4 b:c5 w:Nc3

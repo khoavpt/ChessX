@@ -95,7 +95,7 @@ def minimax(board, depth, alpha, beta):
    
 def getBestMove(board: Board):
     """
-    Find the best possible move from the given board using Minimax algorithm with Alpha-beta pruning
+    Find the best possible move from the given board.
 
     Args:
     board (Board): A chess board as a Board object.
@@ -103,10 +103,13 @@ def getBestMove(board: Board):
     Returns:
     list(tuple): The best possible move for the given board (A move is represented in this format: [source (tuple), destination (tuple)]).
     """
+    # If board is still in the opening phase, search for the best move in the database.
     if board.isInOpeningPhase:
         openingMove = getOpeningMove(board.toString())
         if openingMove != None:
             return openingMove
         else:
             board.isInOpeningPhase = False
+
+    # Else, find the best move using Minimax algorithm with Alpha-beta pruning
     return minimax(board, depth=Board.DEPTH_LIMIT, alpha = -math.inf, beta = math.inf)[0]

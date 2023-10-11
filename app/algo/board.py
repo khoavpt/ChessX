@@ -25,7 +25,8 @@ class Board():
         self.isInOpeningPhase = True
 
         # Initialize pieces
-        self.listOfWhitePieces = [Pawn(4, 6, Piece.WHITE),
+        self.listOfWhitePieces = [
+                                Pawn(4, 6, Piece.WHITE),
                                 Pawn(3, 6, Piece.WHITE),
                                 Knight(x=1, y=7, color=Piece.WHITE),
                                 Knight(x=6, y=7, color=Piece.WHITE),
@@ -40,9 +41,11 @@ class Board():
                                 Queen(x=3, y=7, color=Piece.WHITE),
                                 Rook(x=7, y=7, color=Piece.WHITE),
                                 Rook(x=0, y=7, color=Piece.WHITE),
-                                King(x=4, y=7, color=Piece.WHITE)]
+                                King(x=4, y=7, color=Piece.WHITE)
+                                ]
         
-        self.listOfBlackPieces = [Pawn(4, 1, Piece.BLACK),
+        self.listOfBlackPieces = [
+                                Pawn(4, 1, Piece.BLACK),
                                 Pawn(3, 1, Piece.BLACK),
                                 Knight(x=1, y=0, color=Piece.BLACK),
                                 Knight(x=6, y=0, color=Piece.BLACK),
@@ -57,7 +60,8 @@ class Board():
                                 Queen(x=3, y=0, color=Piece.BLACK),
                                 Rook(x=7, y=0, color=Piece.BLACK),
                                 Rook(x=0, y=0, color=Piece.BLACK),
-                                King(x=4, y=0, color=Piece.BLACK)]
+                                King(x=4, y=0, color=Piece.BLACK)
+                                ]
             
     def copy(self):
         """
@@ -175,9 +179,9 @@ class Board():
                 self.listOfBlackPieces.remove(pieceAtDestination)
             # If the piece moved is a King, check for castle moves.
             if type(piece) == King:
-                if source[0] - destination[0] > 1:
+                if source[0] - destination[0] > 1 and type(self.getPieceAt((0,7))) == Rook:
                     self.getPieceAt((0,7)).moveTo((3, 7))
-                elif destination[0] - source[0] > 1:
+                elif destination[0] - source[0] > 1 and type(self.getPieceAt((7,7))) == Rook:
                     self.getPieceAt((7,7)).moveTo((5, 7))
             # Else if the piece moved is a Pawn, check for Pawn promotion.
             elif type(piece) == Pawn and piece.y == 0:
@@ -193,9 +197,9 @@ class Board():
                 self.listOfWhitePieces.remove(pieceAtDestination)
             # If the piece moved is a King, check for castle moves.
             if type(piece) == King:
-                if source[0] - destination[0] > 1:
+                if source[0] - destination[0] > 1 and type(self.getPieceAt((0,0))) == Rook:
                     self.getPieceAt((0,0)).moveTo((3, 0))
-                elif destination[0] - source[0] > 1:
+                elif destination[0] - source[0] > 1 and type(self.getPieceAt((0,0))) == Rook:
                     self.getPieceAt((7,0)).moveTo((5, 0))
             # Else if the piece moved is a Pawn, check for Pawn promotion.
             elif type(piece) == Pawn and piece.y == 7:
