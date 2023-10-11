@@ -1,5 +1,6 @@
 from game import Game
 from states.state import State
+from states.endstate import EndState
 from constants import *
 import pygame
 from algo.pieces import Piece
@@ -12,8 +13,21 @@ class PlayState(State):
         self.board = Board(Piece.WHITE, game.playerColor)
         self.selected = None
         self.lastMove = None
+        self.font = pygame.font.SysFont(FONT, 18, bold=True)
 
     def update(self) -> None:
+        if self.board.isOver() == 1:
+            if self.game.playerColor == Piece.WHITE:
+                self.game.pushState(EndState(self.game, 'h'))
+            else:
+                self.game.pushState(EndState(self.game, 'a'))
+        elif self.board.isOver() == -1:
+            if self.game.playerColor == Piece.WHITE:
+                self.game.pushState(EndState(self.game, 'a'))
+            else:
+                self.game.pushState(EndState(self.game, 'h'))
+
+
         if self.board.currentPlayer != self.game.playerColor:
             move = ai.getBestMove(self.board)
             self.move(move)
@@ -37,8 +51,9 @@ class PlayState(State):
                         col = 7 - col
                     if not self.selected:
                         piece = self.board.getPieceAt((row, col))
-                        if piece.color == self.game.playerColor:
-                            self.selected = piece        
+                        if piece is not None:
+                            if piece.color == self.game.playerColor:
+                                self.selected = piece        
                         
                     else:
                         selectedPiece = self.selected
@@ -170,7 +185,10 @@ class PlayState(State):
                     # color
                     color = GRAY if row % 2 == 0 else WHITE
                     # label
-                    lbl = self.game.font.render(str(ROWS-row), 1, color)
+                    if self.game.playerColor == Piece.WHITE:
+                        lbl = self.font.render(str(ROWS-row), 1, color)
+                    else:
+                        lbl = self.font.render(str(row + 1), 1, color)
                     lbl_pos = (4, 4 + row * SQ_SIZE)
                     # blit
                     self.game.window.blit(lbl, lbl_pos)
@@ -180,7 +198,10 @@ class PlayState(State):
                     # color
                     color = GRAY if (row + col) % 2 == 0 else WHITE
                     # label
-                    lbl = self.game.font.render(ALPHACOLS[col], 1, color)
+                    if self.game.playerColor == Piece.WHITE:
+                        lbl = self.font.render(ALPHACOLS[col], 1, color)
+                    else:
+                        lbl = self.font.render(ALPHACOLS[7 - col], 1, color)
                     lbl_pos = (col * SQ_SIZE + SQ_SIZE - 15, WINDOW_HEIGHT - 18)
                     # blit
                     self.game.window.blit(lbl, lbl_pos)

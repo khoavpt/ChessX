@@ -7,14 +7,14 @@ from constants import *
 class Game:
 
     def __init__(self):
+        from states.startstate import StartState
+
         pygame.init()
         self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption(WINDOW_TITLE)
         self.playerColor = None
-        self.state = []
+        self.state = [StartState(self)]
         self.images = {}
-        self.font = None
-        self.loadFont()
         self.loadImages()
 
     def loadImages(self) -> None:
@@ -22,9 +22,6 @@ class Game:
         for piece in pieces:
             image = pygame.transform.scale(pygame.image.load(f"assets/{piece}.png"), (SQ_SIZE - 10, SQ_SIZE - 10))
             self.images[piece] = image
-    
-    def loadFont(self) -> None:
-        self.font = pygame.font.SysFont(FONT, 18, bold=True)
 
     def popState(self):
         self.state.pop()
@@ -40,17 +37,15 @@ class Game:
             activeState = self.getActiveState()
             if (activeState == None):
                 continue
-            
-            activeState.update()
 
-            self.window.fill("black")
             activeState.draw()
             pygame.display.flip()
 
-if __name__ == "__main__":
-    from states.playstate import PlayState
-    from states.startstate import StartState
+            activeState.update()
 
+    def newGame(self):
+        self.__init__()
+
+if __name__ == "__main__":
     game = Game()
-    game.state = [StartState(game)]
     game.gameLoop()

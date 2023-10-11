@@ -67,7 +67,7 @@ def getResultBoard(board:Board, move):
     return resultBoard
 
 def minimax(board, depth, alpha, beta):
-   if depth == 0 or board.isOver():
+   if depth == 0 or board.isOver() != 0:
        return None, evaluateBoard(board)
 
    if board.currentPlayer == Piece.WHITE:

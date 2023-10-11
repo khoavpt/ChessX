@@ -124,7 +124,7 @@ class Board():
                 return piece
         return None
 
-    def isOver(self) -> bool:
+    def isOver(self) -> int:
         """
         Check if the current state of the board is the end state (A state is an end state if one of the kings is removed).
 
@@ -132,20 +132,25 @@ class Board():
         None
 
         Returns:
-        bool: True if the current state is the endstate, False otherwise.
+        bool: 1 if white win, -1 if black win, 0 otherwise.
         """
         kingsCount = 0
+        isWhiteWin = False
         for piece in self.listOfWhitePieces:
             if type(piece) == King:
                 kingsCount += 1
+                isWhiteWin = True
         
         for piece in self.listOfBlackPieces:
             if type(piece) == King:
                 kingsCount += 1
 
         if kingsCount != 2:
-            return True
-        return False
+            if isWhiteWin:
+                return 1
+            else:
+                return -1
+        return 0
 
     def movePiece(self, move: list[tuple]) -> None:
         """
